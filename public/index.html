@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                // Redirection vers la page d'accueil si l'utilisateur est déjà connecté
+                window.location.href = 'home.html';
+            }
+        });
+    </script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="home.html">Accueil</a></li>
+        
+        </ul>
+    </nav>
+    <h1>Inscription</h1>
+    <form id="registerForm">
+        <label for="username">Nom d'utilisateur :</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="email">Adresse mail :</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">S'inscrire</button>
+    </form>
+
+    <button id="loginButton">Connexion</button>
+
+    <script src="script.js"></script>
+    <script>
+        // Ajouter un écouteur d'événements pour rediriger vers la page de connexion
+        document.getElementById('loginButton').addEventListener('click', function() {
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

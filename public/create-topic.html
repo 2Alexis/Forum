@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un Topic</title>
+</head>
+<body>
+    <h1>Créer un Topic</h1>
+    <form id="createTopicForm">
+        <label for="title">Titre :</label>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label for="body">Corps :</label>
+        <textarea id="body" name="body" required></textarea><br><br>
+
+        <label for="tags">Tags (séparés par des virgules) :</label>
+        <input type="text" id="tags" name="tags"><br><br>
+
+        <label for="state">État :</label>
+        <select id="state" name="state">
+            <option value="open">Ouvert</option>
+            <option value="closed">Fermé</option>
+            <option value="archived">Archivé</option>
+        </select><br><br>
+
+        <input type="hidden" id="author" name="author">
+
+        <button type="submit">Créer</button>
+    </form>
+
+    <script src="create-topic.js"></script>
+</body>
+</html>

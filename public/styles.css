@@ -1,0 +1,80 @@
+/* Styles généraux pour la page */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+nav {
+    background-color: #333;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 14px 20px;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #575757;
+}
+
+/* Styles pour le dropdown */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;
+    top: 50px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdown-content h2 {
+    background-color: #333;
+    color: white;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.dropdown-content p {
+    padding: 10px;
+    margin: 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.dropdown-content p:last-child {
+    border-bottom: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Styles pour le reste du contenu */
+h1 {
+    text-align: center;
+    margin-top: 50px;
+    color: #333;
+}
