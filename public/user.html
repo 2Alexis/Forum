@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations de l'utilisateur</title>
+    <style>
+        .info {
+            margin: 10px 0;
+        }
+        .info button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Informations de l'utilisateur</h1>
+    <div id="user-info">
+        <div class="info">
+            <span>Username: </span><span id="username"></span>
+            <button onclick="editField('username')">Modifier</button>
+        </div>
+        <div class="info">
+            <span>Email: </span><span id="email"></span>
+            <button onclick="editField('email')">Modifier</button>
+        </div>
+        <div class="info">
+            <span>Biographie: </span><span id="biographie"></span>
+            <button onclick="editField('biographie')">Modifier</button>
+        </div>
+        <div class="info">
+            <span>Profile Pic: </span><span id="profile_pic"></span>
+            <button onclick="editField('profile_pic')">Modifier</button>
+        </div>
+        <div class="info">
+            <span>Friendship Status: </span><span id="friendship_status"></span>
+            <button onclick="editField('friendship_status')">Modifier</button>
+        </div>
+        <div class="info">
+            <span>Last Login: </span><span id="last_login"></span>
+        </div>
+    </div>
+
+    <script src="user.js"></script>
+</body>
+</html>
