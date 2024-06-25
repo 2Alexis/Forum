@@ -4,22 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
+<div id="header">
+    <div id="header-container">
+        <div id="left-header">
+            <a href="home.html"><img id="image-logo" src="../assets/img/logo.png"></a>
+        
+        </div>
+        <div id="middle-header">
+            <form class="search" action="">
+                <input type="search" placeholder="Search here..." required>
+                <button type="submit">Search</button>
+              </form>   
+
+        </div>
+        <div id="right-header">
+            <a href="user.html" id="profile-link">Profil</a>
+            <a href="#" id="logout"><img id="deconnexion" src="assets/img/deco.png"></a>
+        </div>
+    
+    </div>
+</div>
 <body>
-    <nav>
-        <ul>
-            <li><a href="home.html">Accueil</a></li>
-            <li><a href="create-topic.html">Créer un Topic</a></li>
-            <li class="dropdown">
-                <a href="#" id="profile-link">Profil</a>
-                <div class="dropdown-content" id="profile-dropdown">
-                    <!-- Informations du profil seront insérées ici -->
-                </div>
-            </li>
-            <li><a href="#" id="logout">Déconnexion</a></li>
-        </ul>
-    </nav>
+    
     <h1>Bienvenue sur le forum</h1>
 
     <script src="home.js"></script>
