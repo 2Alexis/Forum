@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('author').value = user.username;
 
-    document.getElementById('createTopicForm').addEventListener('submit', function (event) {
+    document.getElementById('createTopicForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
         const title = document.getElementById('title').value;
@@ -35,5 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => console.error('Erreur:', error));
+    });
+
+    document.getElementById('logout').addEventListener('click', function() {
+        localStorage.removeItem('user');
+        alert('Vous avez été déconnecté.');
+        window.location.href = 'login.html';
     });
 });

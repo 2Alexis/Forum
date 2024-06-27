@@ -1,9 +1,10 @@
-document.getElementById('login-form').addEventListener('submit', function(event) {
+document.getElementById('loginForm').addEventListener('submit', function (event) {
     event.preventDefault();
+
     const identifier = document.getElementById('identifier').value;
     const password = document.getElementById('password').value;
 
-    fetch('http://localhost:3000/login', {
+    fetch('http://localhost:3000/login', { // URL complète vers le serveur backend
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -13,13 +14,12 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            alert('Connexion réussie !');
             localStorage.setItem('user', JSON.stringify(data.user));
-            window.location.href = 'home.html';
+            window.location.href = 'home.html'; // Redirige vers la page d'accueil
         } else {
-            alert(data.message);
+            alert('Erreur : ' + data.message);
         }
     })
-    .catch(error => {
-        console.error('Erreur:', error);
-    });
+    .catch(error => console.error('Erreur:', error));
 });
