@@ -59,11 +59,11 @@ router.post('/login', (req, res) => {
 
 // Route pour créer un topic
 router.post('/create-topic', (req, res) => {
-    const { title, body, tags, author, state } = req.body;
+    const { title, body, tags, author_id, state } = req.body;
 
     // Insertion dans la base de données
-    const query = 'INSERT INTO topics (title, body, tags, author, state) VALUES (?, ?, ?, ?, ?)';
-    db.query(query, [title, body, tags, author, state], (err, result) => {
+    const query = 'INSERT INTO topics (title, body, tags, author_id, state) VALUES (?, ?, ?, ?, ?)';
+    db.query(query, [title, body, tags, author_id, state], (err, result) => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
@@ -85,7 +85,6 @@ router.get('/topics', (req, res) => {
         res.status(200).json({ success: true, topics: results });
     });
 });
-
 
 // Route pour récupérer un topic avec ses messages
 router.get('/topics/:id', (req, res) => {
@@ -121,24 +120,56 @@ router.get('/topics/:id', (req, res) => {
     });
 });
 
-// Route pour ajouter un message
-router.post('/messages', (req, res) => {
-    const { topic_id, user_id, body } = req.body;
+// Route pour mettre à jour un topic
+router.put('/topics/:id', (req, res) => {
+    const topicId = req.params.id;
+    const { title, body } = req.body;
 
-    console.log('Données reçues pour ajouter un message:', { topic_id, user_id, body });
-
-    const query = 'INSERT INTO messages (topic_id, user_id, body) VALUES (?, ?, ?)';
-    db.query(query, [topic_id, user_id, body], (err, result) => {
+    const query = 'UPDATE topics SET title = ?, body = ? WHERE id = ?';
+    db.query(query, [title, body, topicId], (err, result) => {
         if (err) {
-            console.error('Erreur lors de l\'insertion du message:', err);
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
-        res.status(201).json({ success: true, message: 'Message ajouté avec succès' });
+
+        res.status(200).json({ success: true, message: 'Topic mis à jour avec succès' });
     });
 });
 
-module.exports = router;
+// Route pour supprimer un topic et ses messages
+router.delete('/topics/:id', (req, res) => {
+    const topicId = req.params.id;
 
+    const deleteMessagesQuery = 'DELETE FROM messages WHERE topic_id = ?';
+    const deleteTopicQuery = 'DELETE FROM topics WHERE id = ?';
+
+    db.query(deleteMessagesQuery, [topicId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Erreur serveur lors de la suppression des messages' });
+        }
+
+        db.query(deleteTopicQuery, [topicId], (err, result) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Erreur serveur lors de la suppression du topic' });
+            }
+
+            res.status(200).json({ success: true, message: 'Topic et ses messages supprimés avec succès' });
+        });
+    });
+});
+
+// Route pour supprimer un message
+router.delete('/messages/:id', (req, res) => {
+    const messageId = req.params.id;
+
+    const query = 'DELETE FROM messages WHERE id = ?';
+    db.query(query, [messageId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+
+        res.status(200).json({ success: true, message: 'Message supprimé avec succès' });
+    });
+});
 
 // Route pour liker un topic
 router.post('/like', (req, res) => {
@@ -193,3 +224,38 @@ router.get('/liked-topics/:user_id', (req, res) => {
         res.status(200).json({ success: true, topics: results });
     });
 });
+
+// Route pour obtenir les informations de l'utilisateur
+router.get('/user/:id', (req, res) => {
+    const userId = req.params.id;
+
+    const query = 'SELECT username, email, biographie, profile_pic, friendship_status, last_login FROM users WHERE id = ?';
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+
+        if (results.length === 0) {
+            return res.status(400).json({ success: false, message: 'Utilisateur non trouvé' });
+        }
+
+        res.status(200).json({ success: true, user: results[0] });
+    });
+});
+
+// Route pour mettre à jour les informations de l'utilisateur
+router.put('/user/:id', (req, res) => {
+    const userId = req.params.id;
+    const { username, biographie, profile_pic } = req.body;
+
+    const query = 'UPDATE users SET username = ?, biographie = ?, profile_pic = ? WHERE id = ?';
+    db.query(query, [username, biographie, profile_pic, userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+
+        res.status(200).json({ success: true, message: 'Informations mises à jour avec succès' });
+    });
+});
+
+module.exports = router;

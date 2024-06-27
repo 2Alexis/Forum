@@ -16,14 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Si l'utilisateur est connecté, afficher les informations du profil et le bouton de déconnexion
         navbar.innerHTML = `
             <li><a href="home.html">Accueil</a></li>
-            <li class="dropdown">
-                <a href="#" id="profile-link">Profil</a>
-                <div class="dropdown-content" id="profile-dropdown">
-                    <h2>Informations du profil</h2>
-                    <p>Nom d'utilisateur : ${user.username}</p>
-                    <p>Email : ${user.email}</p>
-                </div>
-            </li>
+            <li><a href="profile.html?id=${user.id}" id="profile-link">Profil</a></li>
             <li><a href="#" id="logout">Déconnexion</a></li>
         `;
 
@@ -115,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const topic = data.topics[0];
                     likedTopicsContainer.innerHTML = `
                         <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
-                       
                     `;
                 } else {
                     likedTopicsContainer.innerHTML = '<p>Vous n\'avez aimé aucun topic.</p>';
