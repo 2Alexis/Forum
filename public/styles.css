@@ -1,14 +1,29 @@
+@font-face {
+    font-family: rubik;
+    src: url(SpaceGrotesk-VariableFont_wght.ttf);
+  }
+
+
 /* Styles généraux pour la page */
 body {
-    font-family: Arial, sans-serif;
+    font-family: rubik;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+background-color: #1F262E;
+color:white;
 }
 
 nav {
-    background-color: #333;
+    background-color: #262D35;
     padding: 10px 0;
+}
+
+#create-text {
+    text-decoration: none;
+}
+
+#create {
+background-color: black;
 }
 
 nav ul {
@@ -89,11 +104,16 @@ h1 {
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;
-    background-color: white;
+    background-color: #262D35;
 }
 
 .topic h2 {
     margin: 0 0 10px 0;
+}
+
+#topic-link {
+    text-decoration: none;
+    color:white;
 }
 
 .topic p {
@@ -106,7 +126,6 @@ h1 {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Nunito', sans-serif;
     text-decoration: none;
 }
 
@@ -182,19 +201,16 @@ footer{
     max-width: 350px;
     margin-top: 20px;
     font-weight: 500;
-    color: #7a7a7a;
     font-size: 18px;
 }
 
 .box__footer h2{
     margin-bottom: 30px;
-    color: #343434;
     font-weight: 700;
 }
 
 .box__footer a{
     margin-top: 10px;
-    color: #7a7a7a;
     font-weight: 600;
 }
 
@@ -215,11 +231,170 @@ footer{
 
 .box__copyright p{
     margin-top: 20px;
-    color: #7a7a7a;
 }
 
 .box__copyright hr{
     border: none;
     height: 1px;
     background-color: #7a7a7a;
+}
+
+#main-site-container {
+    display: flex;
+    justify-content: center;
+    justify-content: space-evenly;
+}
+
+
+#container-main-left{
+display: flex;
+flex-direction: column;
+background-color: grey;
+height:500px;
+justify-content: space-evenly;
+width:300px;
+}
+
+#create-topic {
+    background-color: #262D35;
+    border-radius: 20px ;
+    width:200px;
+    height:100px;
+    text-align: center;
+    align-content: center;
+}
+
+.text {
+    color: white;
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+#top-left-container {
+    background-color: rgb(73, 73, 73);
+    color:white;
+}
+
+#bot-left-container {
+    background-color: rgb(108, 108, 108);
+}
+
+/* Styles pour le dropdown */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;
+    top: 50px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdown-content h2 {
+    background-color: #333;
+    color: white;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.dropdown-content p {
+    padding: 10px;
+    margin: 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.dropdown-content p:last-child {
+    border-bottom: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Styles pour le reste du contenu */
+h1 {
+    text-align: center;
+    margin-top: 50px;
+    color: #333;
+}
+
+/* Styles pour les topics */
+#topics-container {
+    margin: 20px;
+}
+
+.topic {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.topic h2 {
+    margin: 0 0 10px 0;
+}
+
+.topic p {
+    margin: 5px 0;
+}
+
+/* Styles pour les boutons de like et dislike */
+.like-button, .dislike-button {
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.like-button {
+    background-color: lightgreen;
+}
+
+.dislike-button {
+    background-color: lightcoral;
+}
+
+.like-button.active {
+    background-color: green;
+    color: white;
+}
+
+.dislike-button.active {
+    background-color: red;
+    color: white;
+}
+
+/* Styles pour le popup */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
 }

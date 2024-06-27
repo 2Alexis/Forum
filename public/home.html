@@ -10,7 +10,7 @@
     <nav>
         <ul>
             <li><a href="home.html">Accueil</a></li>
-            <li><a href="create-topic.html">Créer un Topic</a></li>
+            
             <li class="dropdown">
                 <a href="#" id="profile-link">Profil</a>
                 <div class="dropdown-content" id="profile-dropdown">
@@ -21,10 +21,52 @@
         </ul>
     </nav>
     <h1>Bienvenue sur le forum</h1>
-    <div id="topics-container">
-        <!-- Les topics seront insérés ici -->
-    </div>
+    <div id="main-site-container">
+        <div id="container-main-left">
+            <div id="top-left-container">
+                <div id="followers">
+                    <h1 class="text">Followers</h1>
 
+                </div>
+                <div id="liked">
+                    <h1 class="text">Topics you like</h1>
+                    <div id="liked-topics-container"></div>
+                    <button id="show-all-liked-topics">Voir tous les topics likés</button>
+
+                </div>
+                
+
+            </div>
+            <div id="bot-left-container">
+                <h2 class="text">Popular Topic</h2>
+
+            </div>
+        </div>
+        <div id="container-right">
+            
+                <div id="create-topic">
+                <a id="create" href="create-topic.html">
+                    
+                        <p id="create-text">Créer un Topic</p>
+                    
+                </a>
+            </div>
+
+            
+
+
+            <div id="topics-container">
+                <!-- Les topics seront insérés ici -->
+            </div>
+            <div id="pagination">
+                <button id="prev-page">Précédent</button>
+                <button id="next-page">Suivant</button>
+            </div>
+            
+        
+        </div>
+    </div>
+   
     <script src="home.js"></script>
     <footer>
 

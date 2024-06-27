@@ -71,16 +71,21 @@ router.post('/create-topic', (req, res) => {
     });
 });
 
-// Route pour récupérer tous les topics
+// Route pour récupérer les topics avec pagination
 router.get('/topics', (req, res) => {
-    const query = 'SELECT * FROM topics ORDER BY created_at DESC';
-    db.query(query, (err, results) => {
+    const page = parseInt(req.query.page) || 1; // Page par défaut à 1 si non spécifiée
+    const limit = 6; // Limite de 6 topics par page
+    const offset = (page - 1) * limit;
+
+    const query = 'SELECT * FROM topics ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    db.query(query, [limit, offset], (err, results) => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
         res.status(200).json({ success: true, topics: results });
     });
 });
+
 
 // Route pour récupérer un topic avec ses messages
 router.get('/topics/:id', (req, res) => {
@@ -133,3 +138,58 @@ router.post('/messages', (req, res) => {
 });
 
 module.exports = router;
+
+
+// Route pour liker un topic
+router.post('/like', (req, res) => {
+    const { user_id, topic_id, type } = req.body;
+
+    // Vérifier si l'utilisateur a déjà liké ou disliké ce topic
+    const checkQuery = 'SELECT * FROM likes WHERE user_id = ? AND topic_id = ?';
+    db.query(checkQuery, [user_id, topic_id], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la vérification des likes:', err);
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+
+        if (results.length > 0) {
+            // Mettre à jour le type de like
+            const updateQuery = 'UPDATE likes SET type = ? WHERE user_id = ? AND topic_id = ?';
+            db.query(updateQuery, [type, user_id, topic_id], (err, result) => {
+                if (err) {
+                    console.error('Erreur lors de la mise à jour du like:', err);
+                    return res.status(500).json({ success: false, message: 'Erreur serveur' });
+                }
+                return res.status(200).json({ success: true, message: 'Like mis à jour avec succès' });
+            });
+        } else {
+            // Insérer un nouveau like
+            const insertQuery = 'INSERT INTO likes (user_id, topic_id, type) VALUES (?, ?, ?)';
+            db.query(insertQuery, [user_id, topic_id, type], (err, result) => {
+                if (err) {
+                    console.error('Erreur lors de l\'insertion du like:', err);
+                    return res.status(500).json({ success: false, message: 'Erreur serveur' });
+                }
+                return res.status(201).json({ success: true, message: 'Like ajouté avec succès' });
+            });
+        }
+    });
+});
+
+// Route pour récupérer les topics likés par un utilisateur
+router.get('/liked-topics/:user_id', (req, res) => {
+    const userId = req.params.user_id;
+
+    const query = `
+        SELECT t.* FROM topics t
+        JOIN likes l ON t.id = l.topic_id
+        WHERE l.user_id = ? AND l.type = 'like'
+    `;
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération des topics likés:', err);
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+        res.status(200).json({ success: true, topics: results });
+    });
+});
