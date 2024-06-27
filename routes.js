@@ -5,7 +5,7 @@ const db = require('./db');
 
 // Route pour l'inscription
 router.post('/register', (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, profile_pic } = req.body;
 
     // Vérification des contraintes
     if (!/^[a-zA-Z0-9]+$/.test(username)) {
@@ -20,8 +20,8 @@ router.post('/register', (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, 8);
 
     // Insertion dans la base de données
-    const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-    db.query(query, [username, email, hashedPassword], (err, result) => {
+    const query = 'INSERT INTO users (username, email, password, profile_pic) VALUES (?, ?, ?, ?)';
+    db.query(query, [username, email, hashedPassword, profile_pic], (err, result) => {
         if (err) {
             if (err.code === 'ER_DUP_ENTRY') {
                 return res.status(400).json({ success: false, message: 'Le nom d’utilisateur ou l’adresse mail est déjà utilisé' });

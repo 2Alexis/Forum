@@ -12,6 +12,29 @@
                 // Redirection vers la page d'accueil si l'utilisateur est déjà connecté
                 window.location.href = 'home.html';
             }
+            
+            const profileImages = [
+                'profile1.png', 'profile2.png', 'profile3.png', 'profile4.png', 'profile5.png',
+                'profile6.png', 'profile7.png', 'profile8.png', 'profile9.png', 'profile10.png',
+                'profile11.png', 'profile12.png', 'profile13.png', 'profile14.png', 'profile15.png',
+                'profile16.png', 'profile17.png', 'profile18.png', 'profile19.png', 'profile20.png'
+            ];
+            
+            let currentProfileIndex = Math.floor(Math.random() * profileImages.length);
+            const profileImageElement = document.getElementById('profileImage');
+            const profilePicInput = document.getElementById('profile_pic');
+
+            function updateProfileImage() {
+                profileImageElement.src = `/public/assets/img/profiles/${profileImages[currentProfileIndex]}`;
+                profilePicInput.value = profileImages[currentProfileIndex];
+            }
+
+            updateProfileImage();
+
+            document.getElementById('nextProfileImage').addEventListener('click', function() {
+                currentProfileIndex = (currentProfileIndex + 1) % profileImages.length;
+                updateProfileImage();
+            });
         });
     </script>
 </head>
@@ -19,7 +42,6 @@
     <nav>
         <ul>
             <li><a href="home.html">Accueil</a></li>
-        
         </ul>
     </nav>
     <h1>Inscription</h1>
@@ -33,6 +55,12 @@
         <label for="password">Mot de passe :</label>
         <input type="password" id="password" name="password" required><br><br>
 
+        <input type="hidden" id="profile_pic" name="profile_pic">
+
+        <label for="profileImage">Photo de profil :</label><br>
+        <img id="profileImage" src="" alt="Profile Image" style="width: 100px; height: 100px;"><br>
+        <button type="button" id="nextProfileImage">Changer de photo</button><br><br>
+
         <button type="submit">S'inscrire</button>
     </form>
 
@@ -44,47 +72,42 @@
             window.location.href = 'login.html';
         });
     </script>
-        <footer>
-
-            <div class="container__footer">
-                <div class="box__footer">
-                    <div class="logo">
-                        <img src="/public/assets/img/logo.png" alt="">
-                    </div>
-                    <div class="terms">
-                        <p>Welcome to TrendyTalkForum.com, a place to discuss and share knowledge on mood. Join our community to connect with like-minded individuals and expand your understanding.</p>
-                    </div>
+    <footer>
+        <div class="container__footer">
+            <div class="box__footer">
+                <div class="logo">
+                    <img src="/public/assets/img/logo.png" alt="">
                 </div>
-                <div class="box__footer">
-                    <h2>solutions</h2>
-                    <a href="https://www.google.com">App </a>
-                    <a href="#">App Marketing</a>
-                    <a href="#">IOS </a>
-                    <a href="#">Android</a>
+                <div class="terms">
+                    <p>Welcome to TrendyTalkForum.com, a place to discuss and share knowledge on mood. Join our community to connect with like-minded individuals and expand your understanding.</p>
                 </div>
-                <div class="box__footer">
-                    
-                    <h2>Quick Links</h2>
-                    <a href="#">Home</a>
-                    <a href="#">Categories</a>
-                    <a href="#">Popular Topics</a>
-                    <a href="#">Help/FAQ</a>              
-                </div>
-    
-                <div class="box__footer">
-                    <h2>socail media</h2>
-                    <a href="#"> <i class="fab fa-facebook-square"></i> Facebook</a>
-                    <a href="#"><i class="fab fa-twitter-square"></i> Twitter</a>
-                    <a href="#"><i class="fab fa-linkedin"></i> Linkedin</a>
-                    <a href="#"><i class="fab fa-instagram-square"></i> Instagram</a>
-                </div>
-    
             </div>
-    
-            <div class="box__copyright">
-                <hr>
-                <p> © 2024 <b>TrendyTalkForum</b></p>
+            <div class="box__footer">
+                <h2>solutions</h2>
+                <a href="https://www.google.com">App </a>
+                <a href="#">App Marketing</a>
+                <a href="#">IOS </a>
+                <a href="#">Android</a>
             </div>
-        </footer>
+            <div class="box__footer">
+                <h2>Quick Links</h2>
+                <a href="#">Home</a>
+                <a href="#">Categories</a>
+                <a href="#">Popular Topics</a>
+                <a href="#">Help/FAQ</a>              
+            </div>
+            <div class="box__footer">
+                <h2>socail media</h2>
+                <a href="#"> <i class="fab fa-facebook-square"></i> Facebook</a>
+                <a href="#"><i class="fab fa-twitter-square"></i> Twitter</a>
+                <a href="#"><i class="fab fa-linkedin"></i> Linkedin</a>
+                <a href="#"><i class="fab fa-instagram-square"></i> Instagram</a>
+            </div>
+        </div>
+        <div class="box__copyright">
+            <hr>
+            <p> © 2024 <b>TrendyTalkForum</b></p>
+        </div>
+    </footer>
 </body>
 </html>
