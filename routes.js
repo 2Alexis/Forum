@@ -53,7 +53,7 @@ router.post('/login', (req, res) => {
             return res.status(400).json({ success: false, message: 'Mot de passe incorrect' });
         }
 
-        res.status(200).json({ success: true, message: 'Connexion réussie', user: { username: user.username, email: user.email } });
+        res.status(200).json({ success: true, message: 'Connexion réussie', user: { id: user.id, username: user.username, email: user.email } });
     });
 });
 
@@ -79,6 +79,56 @@ router.get('/topics', (req, res) => {
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
         res.status(200).json({ success: true, topics: results });
+    });
+});
+
+// Route pour récupérer un topic avec ses messages
+router.get('/topics/:id', (req, res) => {
+    const topicId = req.params.id;
+
+    const topicQuery = 'SELECT * FROM topics WHERE id = ?';
+    const messagesQuery = `
+        SELECT m.*, u.username 
+        FROM messages m 
+        JOIN users u ON m.user_id = u.id 
+        WHERE m.topic_id = ? 
+        ORDER BY m.created_at ASC
+    `;
+
+    db.query(topicQuery, [topicId], (err, topicResults) => {
+        if (err) {
+            console.error('Erreur lors de la récupération du topic:', err);
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+
+        if (topicResults.length === 0) {
+            return res.status(400).json({ success: false, message: 'Topic non trouvé' });
+        }
+
+        db.query(messagesQuery, [topicId], (err, messageResults) => {
+            if (err) {
+                console.error('Erreur lors de la récupération des messages:', err);
+                return res.status(500).json({ success: false, message: 'Erreur serveur' });
+            }
+
+            res.status(200).json({ success: true, topic: topicResults[0], messages: messageResults });
+        });
+    });
+});
+
+// Route pour ajouter un message
+router.post('/messages', (req, res) => {
+    const { topic_id, user_id, body } = req.body;
+
+    console.log('Données reçues pour ajouter un message:', { topic_id, user_id, body });
+
+    const query = 'INSERT INTO messages (topic_id, user_id, body) VALUES (?, ?, ?)';
+    db.query(query, [topic_id, user_id, body], (err, result) => {
+        if (err) {
+            console.error('Erreur lors de l\'insertion du message:', err);
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+        res.status(201).json({ success: true, message: 'Message ajouté avec succès' });
     });
 });
 

@@ -39,15 +39,13 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const topicsContainer = document.createElement('div');
-                topicsContainer.id = 'topics-container';
-                document.body.appendChild(topicsContainer);
+                const topicsContainer = document.getElementById('topics-container');
 
                 data.topics.forEach(topic => {
                     const topicElement = document.createElement('div');
                     topicElement.classList.add('topic');
                     topicElement.innerHTML = `
-                        <h2>${topic.title}</h2>
+                        <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                         <p>${topic.body}</p>
                         <p><strong>Tags:</strong> ${topic.tags}</p>
                         <p><strong>Author:</strong> ${topic.author}</p>
