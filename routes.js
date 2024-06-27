@@ -53,10 +53,9 @@ router.post('/login', (req, res) => {
             return res.status(400).json({ success: false, message: 'Mot de passe incorrect' });
         }
 
-        res.status(200).json({ success: true, message: 'Connexion réussie', user: { id: user.id, username: user.username, email: user.email } });
+        res.status(200).json({ success: true, message: 'Connexion réussie', user: { username: user.username, email: user.email } });
     });
 });
-
 
 // Route pour créer un topic
 router.post('/create-topic', (req, res) => {
@@ -73,37 +72,3 @@ router.post('/create-topic', (req, res) => {
 });
 
 module.exports = router;
-
-
-// Route pour obtenir les informations de l'utilisateur
-router.get('/user/:id', (req, res) => {
-    const userId = req.params.id;
-
-    const query = 'SELECT username, email, biographie, profile_pic, friendship_status, last_login FROM users WHERE id = ?';
-    db.query(query, [userId], (err, results) => {
-        if (err) {
-            return res.status(500).json({ success: false, message: 'Erreur serveur' });
-        }
-
-        if (results.length === 0) {
-            return res.status(400).json({ success: false, message: 'Utilisateur non trouvé' });
-        }
-
-        res.status(200).json({ success: true, user: results[0] });
-    });
-});
-
-// Route pour mettre à jour les informations de l'utilisateur
-router.put('/user/:id', (req, res) => {
-    const userId = req.params.id;
-    const { username, email, biographie, profile_pic, friendship_status } = req.body;
-
-    const query = 'UPDATE users SET username = ?, email = ?, biographie = ?, profile_pic = ?, friendship_status = ? WHERE id = ?';
-    db.query(query, [username, email, biographie, profile_pic, friendship_status, userId], (err, results) => {
-        if (err) {
-            return res.status(500).json({ success: false, message: 'Erreur serveur' });
-        }
-
-        res.status(200).json({ success: true, message: 'Informations mises à jour avec succès' });
-    });
-});

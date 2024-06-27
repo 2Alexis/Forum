@@ -16,7 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
         navbar.innerHTML = `
             <li><a href="home.html">Accueil</a></li>
             <li><a href="create-topic.html">Créer un Topic</a></li>
-            <li><a href="user.html?id=${user.id}" id="profile-link">Profil</a></li>
+            <li class="dropdown">
+                <a href="#" id="profile-link">Profil</a>
+                <div class="dropdown-content" id="profile-dropdown">
+                    <h2>Informations du profil</h2>
+                    <p>Nom d'utilisateur : ${user.username}</p>
+                    <p>Email : ${user.email}</p>
+                </div>
+            </li>
             <li><a href="#" id="logout">Déconnexion</a></li>
         `;
 
