@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const topic = data.topics[0];
                     likedTopicsContainer.innerHTML = `
                         <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
-                        <p>${topic.body}</p>
+                       
                     `;
                 } else {
                     likedTopicsContainer.innerHTML = '<p>Vous n\'avez aimé aucun topic.</p>';
