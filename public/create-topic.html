@@ -24,25 +24,26 @@
     <form id="createTopicForm">
         <label for="title">Titre :</label>
         <input type="text" id="title" name="title" required><br><br>
-
         <label for="body">Corps :</label>
         <textarea id="body" name="body" required></textarea><br><br>
-
         <label for="tags">Tags (séparés par des virgules) :</label>
         <input type="text" id="tags" name="tags"><br><br>
-
         <label for="state">État :</label>
         <select id="state" name="state">
             <option value="open">Ouvert</option>
             <option value="closed">Fermé</option>
             <option value="archived">Archivé</option>
         </select><br><br>
-
+        <label for="category">Catégorie :</label>
+        <select id="category" name="category">
+            <option value="informatic">Informatique</option>
+            <option value="vgames">Jeux vidéos</option>
+            <option value="sport">Sport</option>
+        </select><br><br>
         <input type="hidden" id="author" name="author">
-
         <button type="submit">Créer</button>
     </form>
-
     <script src="create-topic.js"></script>
+    
 </body>
 </html>

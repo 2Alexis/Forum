@@ -5,10 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = 'login.html';
         return;
     }
-
     const urlParams = new URLSearchParams(window.location.search);
     const topicId = urlParams.get('id');
-
     fetch(`http://localhost:3000/topics/${topicId}`)
         .then(response => response.json())
         .then(data => {
@@ -67,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.delete-message').forEach(button => {
                     button.addEventListener('click', function() {
                         const messageId = this.getAttribute('data-message-id');
-                        
+
                         fetch(`http://localhost:3000/messages/${messageId}`, {
                             method: 'DELETE'
                         })
@@ -88,12 +86,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => console.error('Erreur:', error));
-
     document.getElementById('addMessageForm').addEventListener('submit', function(event) {
         event.preventDefault();
         
         const body = document.getElementById('message-body').value;
-
         fetch('http://localhost:3000/messages', {
             method: 'POST',
             headers: {
@@ -112,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Erreur:', error));
     });
-
     document.getElementById('logout').addEventListener('click', function() {
         localStorage.removeItem('user');
         alert('Vous avez été déconnecté.');

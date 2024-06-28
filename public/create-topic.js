@@ -1,14 +1,34 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Récupérer les informations de l'utilisateur connecté
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) {
         alert('Vous devez être connecté pour créer un topic.');
         window.location.href = 'login.html';
         return;
     }
-    
-    // Assigner l'id de l'utilisateur connecté au champ caché author_id
     document.getElementById('author').value = user.id;
+
+    function loadCategories() {
+        fetch('http://localhost:3000/categories')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const categorySelect = document.getElementById('category');
+                    data.categories.forEach(category => {
+                        const categoryOption = document.createElement('option');
+                        categoryOption.value = category.id;
+                        categoryOption.textContent = category.name;
+                        categorySelect.appendChild(categoryOption);
+                    });
+                } else {
+                    console.error('Failed to load categories:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    loadCategories();
 
     document.getElementById('createTopicForm').addEventListener('submit', function(event) {
         event.preventDefault();
@@ -18,19 +38,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const tags = document.getElementById('tags').value;
         const author_id = document.getElementById('author').value;
         const state = document.getElementById('state').value;
+        const category_id = document.getElementById('category').value;
 
-        fetch('http://localhost:3000/create-topic', { // URL complète vers le serveur backend
+        fetch('http://localhost:3000/create-topic', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ title, body, tags, author_id, state })
+            body: JSON.stringify({ title, body, tags, author_id, state, category_id })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 alert('Topic créé avec succès !');
-                window.location.href = 'home.html'; // Redirige vers la page d'accueil
+                window.location.href = 'home.html';
             } else {
                 alert('Erreur : ' + data.message);
             }
