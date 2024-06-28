@@ -7,15 +7,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    document.getElementById('author').value = user.username;
+    // Assigner l'id de l'utilisateur connecté au champ caché author_id
+    document.getElementById('author').value = user.id;
 
-    document.getElementById('createTopicForm').addEventListener('submit', function (event) {
+    document.getElementById('createTopicForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
         const title = document.getElementById('title').value;
         const body = document.getElementById('body').value;
         const tags = document.getElementById('tags').value;
-        const author = document.getElementById('author').value;
+        const author_id = document.getElementById('author').value;
         const state = document.getElementById('state').value;
 
         fetch('http://localhost:3000/create-topic', { // URL complète vers le serveur backend
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ title, body, tags, author, state })
+            body: JSON.stringify({ title, body, tags, author_id, state })
         })
         .then(response => response.json())
         .then(data => {
@@ -35,5 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => console.error('Erreur:', error));
+    });
+
+    document.getElementById('logout').addEventListener('click', function() {
+        localStorage.removeItem('user');
+        alert('Vous avez été déconnecté.');
+        window.location.href = 'login.html';
     });
 });

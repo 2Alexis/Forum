@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du Topic</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="home.html">Accueil</a></li>
+            <li><a href="create-topic.html">Créer un Topic</a></li>
+            <li class="dropdown">
+                <a href="#" id="profile-link">Profil</a>
+                <div class="dropdown-content" id="profile-dropdown">
+                    <!-- Informations du profil seront insérées ici -->
+                </div>
+            </li>
+            <li><a href="#" id="logout">Déconnexion</a></li>
+        </ul>
+    </nav>
+    <h1 id="topic-title">Titre du Topic</h1>
+    <p id="topic-body">Contenu du Topic</p>
+    <div id="messages-container">
+        <!-- Les messages seront insérés ici -->
+    </div>
+
+    <h2>Ajouter un message</h2>
+    <form id="addMessageForm">
+        <textarea id="message-body" name="message-body" required></textarea><br><br>
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <script src="topic.js"></script>
+</body>
+</html>

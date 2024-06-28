@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     const user = JSON.parse(localStorage.getItem('user'));
 
+    let currentPage = 1;
+
     const navbar = document.querySelector('nav ul');
 
     if (!user) {
         // Si l'utilisateur n'est pas connecté, afficher les boutons de connexion et d'inscription
         navbar.innerHTML = `
             <li><a href="home.html">Accueil</a></li>
-            <li><a href="create-topic.html">Créer un Topic</a></li>
             <li><a href="login.html">Connexion</a></li>
             <li><a href="index.html">Inscription</a></li>
         `;
