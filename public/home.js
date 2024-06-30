@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function createTagElements(tags) {
         return tags.split(',').map(tag => `<div class="tag">${tag.trim()}</div>`).join('');
     }
+    
 
     function loadTopics(page) {
         fetch(`http://localhost:3000/topics?page=${page}`)
@@ -95,8 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p><a id="author" href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
                             </div>
                             <p><strong>Created at:</strong> ${new Date(topic.created_at).toLocaleString()}</p>
-                            <button class="like-button" data-topic-id="${topic.id}" data-type="like">Like</button>
-                            <button class="dislike-button" data-topic-id="${topic.id}" data-type="dislike">Dislike</button>
+                            <button class="like-button" data-topic-id="${topic.id}" data-type="like"><img src="pouchehaut.png" class="pouce"></button>
+                            <button class="dislike-button" data-topic-id="${topic.id}" data-type="dislike"><img src="pouchehaut.png" class="pouce"></button>
                         `;
                         topicsContainer.appendChild(topicElement);
                     });

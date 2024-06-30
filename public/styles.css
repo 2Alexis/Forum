@@ -116,7 +116,10 @@ h1 {
 
 #author {
     color: white;
+
 }
+
+
 
 #user-info {
     display: flex;
@@ -279,10 +282,12 @@ footer{
 }
 
 #container-main-left{
+
 display: flex;
 flex-direction: column;
-background-color: grey;
+background-color: rgb(255, 255, 255);
 height:500px;
+border-radius: 20px;
 justify-content: space-evenly;
 width:300px;
 }
