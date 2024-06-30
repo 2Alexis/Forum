@@ -72,6 +72,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error:', error));
     }
 
+    function createTagElements(tags) {
+        return tags.split(',').map(tag => `<div class="tag">${tag.trim()}</div>`).join('');
+    }
+
     function loadTopics(page) {
         fetch(`http://localhost:3000/topics?page=${page}`)
             .then(handleError)
@@ -83,12 +87,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         const topicElement = document.createElement('div');
                         topicElement.classList.add('topic');
                         topicElement.innerHTML = `
-                            <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
+                            <h2><a id="title-topic" href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                             <p>${topic.body}</p>
-                            <p><strong>Tags:</strong> ${topic.tags}</p>
-                            <div>
-                                <img class="profile-pic"src="${topic.author_profile_pic}" alt="Profile Picture">
-                                <p><a href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
+                            <div><strong>Tags:</strong> ${createTagElements(topic.tags)}</div>
+                            <div id="user-info">
+                                <img class="profile-pic" src="${topic.author_profile_pic}" alt="Profile Picture">
+                                <p><a id="author" href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
                             </div>
                             <p><strong>Created at:</strong> ${new Date(topic.created_at).toLocaleString()}</p>
                             <button class="like-button" data-topic-id="${topic.id}" data-type="like">Like</button>
@@ -140,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         topicElement.innerHTML = `
                             <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                             <p>${topic.body}</p>
-                            <p><strong>Tags:</strong> ${topic.tags}</p>
+                            <div><strong>Tags:</strong> ${createTagElements(topic.tags)}</div>
                             <div>
                                 <img src="${topic.author_profile_pic}" alt="Profile Picture">
                                 <p><a href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
