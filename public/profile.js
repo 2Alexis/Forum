@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('email').textContent = data.user.email;
                 document.getElementById('biographie').value = data.user.biographie;
                 document.getElementById('profile_pic_input').value = data.user.profile_pic;
+                loadFriends();
             } else {
                 alert('Erreur : ' + data.message);
             }
@@ -82,10 +83,88 @@ document.addEventListener('DOMContentLoaded', function() {
             updateProfileImage();
         });
     });
-});
 
-document.getElementById('logout').addEventListener('click', function() {
-    localStorage.removeItem('user');
-    alert('Vous avez été déconnecté.');
-    window.location.href = 'login.html';
+    function loadFriends() {
+        fetch(`http://localhost:3000/friends/${user.id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const friendsListContainer = document.getElementById('friendsListContainer');
+                    friendsListContainer.innerHTML = '';
+                    data.friends.forEach(friend => {
+                        const friendItem = document.createElement('li');
+                        friendItem.innerHTML = `
+                            <img src="${friend.profile_pic}" alt="Profile Image" class="friend-pic">
+                            <span>${friend.username}</span>
+                            <button class="remove-friend" data-friend-id="${friend.id}">Supprimer</button>
+                        `;
+                        friendsListContainer.appendChild(friendItem);
+                    });
+
+                    document.querySelectorAll('.remove-friend').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const friendId = this.getAttribute('data-friend-id');
+                            showConfirmationModal(friendId);
+                        });
+                    });
+                } else {
+                    console.error('Erreur lors de la récupération des amis:', data.message);
+                }
+            })
+            .catch(error => console.error('Erreur lors de la récupération des amis:', error));
+    }
+
+    function showConfirmationModal(friendId) {
+        const modal = document.getElementById('confirmModal');
+        const confirmDeleteButton = document.getElementById('confirmDelete');
+        const cancelDeleteButton = document.getElementById('cancelDelete');
+        const closeModalButton = document.querySelector('.close');
+
+        modal.style.display = 'block';
+
+        closeModalButton.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        cancelDeleteButton.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        confirmDeleteButton.onclick = function() {
+            removeFriend(friendId);
+            modal.style.display = 'none';
+        }
+    }
+
+    function removeFriend(friendId) {
+        fetch('http://localhost:3000/remove-friend', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: user.id, friend_id: friendId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Ami supprimé avec succès !');
+                loadFriends();
+            } else {
+                alert('Erreur : ' + data.message);
+            }
+        })
+        .catch(error => console.error('Erreur lors de la suppression de l\'ami:', error));
+    }
+
+    document.getElementById('logout').addEventListener('click', function() {
+        localStorage.removeItem('user');
+        alert('Vous avez été déconnecté.');
+        window.location.href = 'login.html';
+    });
 });

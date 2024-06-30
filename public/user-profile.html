@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil de l'utilisateur</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="home.html">Accueil</a></li>
+            <li><a href="create-topic.html">Créer un Topic</a></li>
+            <li><a href="profile.html">Profil</a></li>
+            <li><a href="login.html" id="logout">Déconnexion</a></li>
+        </ul>
+    </nav>
+    <div id="user-profile-container"></div>
+    <button id="send-friend-request">Envoyer une demande d'ami</button>
+    <button id="accept-friend-request" style="display:none;">Accepter la demande d'ami</button>
+    <button id="reject-friend-request" style="display:none;">Rejeter la demande d'ami</button>
+    <div id="private-topics-container" style="display:none;">
+        <h2>Topics privés</h2>
+        <div id="private-topics"></div>
+    </div>
+    <script src="user-profile.js"></script>
+</body>
+</html>

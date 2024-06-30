@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="dashboard.js"></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="home.html">Accueil</a></li>
+            <li><a href="profile.html">Profil</a></li>
+            <li><a href="#" id="logout">Déconnexion</a></li>
+        </ul>
+    </nav>
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+
+        <section>
+            <h2>Utilisateurs</h2>
+            <div id="users-container"></div>
+        </section>
+
+        <section>
+            <h2>Topics</h2>
+            <div id="topics-container"></div>
+        </section>
+
+        <section>
+            <h2>Messages</h2>
+            <div id="messages-container"></div>
+        </section>
+    </div>
+</body>
+</html>

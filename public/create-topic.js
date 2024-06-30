@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const title = document.getElementById('title').value;
         const body = document.getElementById('body').value;
         const tags = document.getElementById('tags').value;
-        const author_id = document.getElementById('author').value;
+        const author_id = user.id; // Directly use user.id
         const state = document.getElementById('state').value;
         const category_id = document.getElementById('category').value;
 
