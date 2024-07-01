@@ -192,7 +192,13 @@ router.get('/topics/:id', (req, res) => {
         `;
     }
 
-    const topicQuery = 'SELECT * FROM topics WHERE id = ?';
+    const topicQuery = `
+        SELECT t.*, u.username AS author_name, u.profile_pic AS author_profile_pic 
+        FROM topics t 
+        JOIN users u ON t.author_id = u.id 
+        WHERE t.id = ?
+    `;
+
     db.query(topicQuery, [topicId], (err, topicResults) => {
         if (err) {
             console.error('Erreur lors de la récupération du topic:', err);
@@ -211,18 +217,6 @@ router.get('/topics/:id', (req, res) => {
     });
 });
 
-// Route pour mettre à jour un topic
-router.put('/topics/:id', (req, res) => {
-    const topicId = req.params.id;
-    const { title, body } = req.body;
-    const query = 'UPDATE topics SET title = ?, body = ? WHERE id = ?';
-    db.query(query, [title, body, topicId], (err, result) => {
-        if (err) {
-            return res.status(500).json({ success: false, message: 'Erreur serveur' });
-        }
-        res.status(200).json({ success: true, message: 'Topic mis à jour avec succès' });
-    });
-});
 
 // Route pour supprimer un topic et ses messages
 router.delete('/topics/:id', (req, res) => {

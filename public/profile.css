@@ -82,3 +82,14 @@ nav ul li a:hover {
 .profile-container button:hover {
     background-color: #575757;
 }
+.message .dislike-button {
+    background-color: #dc3545;
+}
+
+.message .like-button:hover {
+    background-color: #0056b3;
+}
+
+.message .dislike-button:hover {
+    background-color: #c82333;
+}   
