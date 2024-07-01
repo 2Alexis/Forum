@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         messageElement.innerHTML = `
                             <p><strong>${message.username}:</strong> ${message.body}</p>
                             <p><em>Posté le ${new Date(message.created_at).toLocaleString()}</em></p>
-                            <p><strong>Popularité:</strong> ${message.popularity || 0}</p>
+                            <p id="popularite"><strong>Popularité:</strong> ${message.popularity || 0}</p>
                             <button class="like-button" data-message-id="${message.id}" data-type="like">Like</button>
                             <button class="dislike-button" data-message-id="${message.id}" data-type="dislike">Dislike</button>
                         `;

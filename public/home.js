@@ -45,7 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleError(response) {
         if (!response.ok) {
-            throw Error(response.statusText);
+            return response.json().then(errorData => {
+                throw new Error('Error: ' + errorData.message);
+            });
         }
         return response.json();
     }
@@ -75,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function createTagElements(tags) {
         return tags.split(',').map(tag => `<div class="tag">${tag.trim()}</div>`).join('');
     }
-    
 
     function loadTopics(page) {
         fetch(`http://localhost:3000/topics?page=${page}`)
@@ -90,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         topicElement.innerHTML = `
                             <h2><a id="title-topic" href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                             <p>${topic.body}</p>
-                            <div><strong>Tags:</strong> ${createTagElements(topic.tags)}</div>
+                            <div> ${createTagElements(topic.tags)}</div>
                             <div id="user-info">
                                 <img class="profile-pic" src="${topic.author_profile_pic}" alt="Profile Picture">
                                 <p><a id="author" href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
@@ -135,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadTopicsByCategory(categoryId) {
+        console.log('Loading topics for category ID:', categoryId); // Debug log
         fetch(`http://localhost:3000/topics/category/${categoryId}`)
             .then(handleError)
             .then(data => {
@@ -183,11 +185,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                     });
                 } else {
-                    console.error('Failed to load topics:', data.message);
+                    console.error('Failed to load topics by category:', data.message);
                 }
             })
             .catch(error => console.error('Error:', error));
     }
+    
 
     document.getElementById('prev-page').addEventListener('click', function() {
         if (currentPage > 1) {
@@ -208,16 +211,16 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(handleError)
             .then(data => {
                 if (data.success) {
-                    const popularTopicsContainer = document.getElementById('bot-left-container');
+                    const popularTopicsContainer = document.getElementById('popular-topics-container');
                     popularTopicsContainer.innerHTML = '';
-                    data.topics.forEach(topic => {
-                        const topicElement = document.createElement('div');
-                        topicElement.classList.add('populartopic');
-                        topicElement.innerHTML = `
+                    if (data.topics.length > 0) {
+                        const topic = data.topics[0]; // Get only the first popular topic
+                        popularTopicsContainer.innerHTML = `
                             <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                         `;
-                        popularTopicsContainer.appendChild(topicElement);
-                    });
+                    } else {
+                        popularTopicsContainer.innerHTML = '<p>Aucun topic populaire.</p>';
+                    }
                 } else {
                     console.error('Failed to load popular topics:', data.message);
                 }
@@ -226,6 +229,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     loadPopularTopics();
+
+    document.getElementById('show-all-popular-topics').addEventListener('click', function() {
+        fetch('http://localhost:3000/popular-topics')
+            .then(handleError)
+            .then(data => {
+                if (data.success) {
+                    let topicsList = '';
+                    data.topics.forEach(topic => {
+                        topicsList += `
+                            <div>
+                                <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
+                                <p>${topic.body}</p>
+                            </div>
+                        `;
+                    });
+                    const popup = document.createElement('div');
+                    popup.classList.add('popup');
+                    popup.innerHTML = `
+                        <div class="popup-content">
+                            <span class="close-button">&times;</span>
+                            ${topicsList}
+                        </div>
+                    `;
+                    document.body.appendChild(popup);
+                    document.querySelector('.close-button').addEventListener('click', function() {
+                        document.body.removeChild(popup);
+                    });
+                } else {
+                    console.error('Failed to load popular topics:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
 
     function updateLikedTopics() {
         fetch(`http://localhost:3000/liked-topics/${user.id}`)
@@ -237,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data.topics.length > 0) {
                         const topic = data.topics[0]; // Get only the first liked topic
                         likedTopicsContainer.innerHTML = `
-                            <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
+                            <h2><a id="liked" href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                         `;
                     } else {
                         likedTopicsContainer.innerHTML = '<p>Vous n\'avez aimé aucun topic.</p>';
@@ -259,8 +295,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     let topicsList = '';
                     data.topics.forEach(topic => {
                         topicsList += `
-                            <div>
-                                <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
+                            <div id="liked-topics-container">
+                                <h2><a id="liked" href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                                 <p>${topic.body}</p>
                             </div>
                         `;

@@ -404,17 +404,30 @@ router.post('/create-topic', (req, res) => {
     });
 });
 
-// Route pour récupérer les topics par catégorie
+
 router.get('/topics/category/:category_id', (req, res) => {
     const categoryId = req.params.category_id;
-    const query = 'SELECT * FROM topics WHERE category_id = ? ORDER BY created_at DESC';
+    const query = `
+        SELECT t.*, u.username AS author_name, u.profile_pic AS author_profile_pic 
+        FROM topics t 
+        JOIN users u ON t.author_id = u.id 
+        WHERE t.category_id = ? 
+        ORDER BY t.created_at DESC
+    `;
     db.query(query, [categoryId], (err, results) => {
         if (err) {
+            console.error('Erreur lors de la récupération des topics par catégorie:', err);
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ success: false, message: 'Aucun topic trouvé pour cette catégorie' });
         }
         res.status(200).json({ success: true, topics: results });
     });
 });
+
+
+
 
 // Route pour obtenir les informations de l'utilisateur
 router.get('/user/:id', (req, res) => {

@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const state = document.getElementById('state').value;
         const category_id = document.getElementById('category').value;
 
+        console.log('Creating topic with category_id:', category_id); // Debugging line
+
         fetch('http://localhost:3000/create-topic', {
             method: 'POST',
             headers: {

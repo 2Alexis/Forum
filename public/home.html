@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .show-all-button {
+            height: 50px;
+            border: none;
+            background-color: #262D35;
+            color: white;
+            border-radius: 20px;
+            width: 170px;
+        }
+    </style>
 </head>
 <body>
     <nav>
         <ul>
             <li><a href="home.html">Accueil</a></li>
-            <li class="dropdown">
-                <div class="dropdown-content" id="profile-dropdown">
-                    <!-- Informations du profil seront insérées ici -->
-                </div>
-            </li>
             <li class="dropdown">
                 <a href="#">Catégories</a>
                 <div class="dropdown-content" id="categories-dropdown">
@@ -28,19 +33,19 @@
     <div id="main-site-container">
         <div id="container-main-left">
             <div id="top-left-container">
-                <div id="followers">
-                    <h1 class="text">Followers</h1>
-                </div>
+                
                 <div id="liked">
                     <h1 class="text">Topics you like</h1>
                     <div id="liked-topics-container"></div>
-                    <button id="show-all-liked-topics">Voir tous les topics likés</button>
+                    <button id="show-all-liked-topics" class="show-all-button">Voir tous les topics likés</button>
                 </div>
             </div>
             <div id="requests-popup" class="popup"></div>
+            <div id="separation"></div>
             <div id="bot-left-container">
                 <h2 class="text">Popular Topics</h2>
-                <!-- Les topics populaires seront insérés ici -->
+                <div id="popular-topics-container"></div>
+                <button id="show-all-popular-topics" class="show-all-button">Voir les topics populaires</button>
             </div>
         </div>
         <div id="container-right">
