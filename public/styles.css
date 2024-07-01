@@ -121,6 +121,11 @@ h1 {
 
 
 
+.pouce  {
+    width:50px;
+    background: none;
+}
+
 #user-info {
     display: flex;
     align-items: center;
@@ -373,19 +378,108 @@ h1 {
     margin: 5px 0;
 }
 
-/* Styles pour les boutons de like et dislike */
-.like-button, .dislike-button {
-    padding: 10px;
+.like-button {
+    background: none;
     border: none;
-    cursor: pointer;
 }
 
-.like-button {
-    background-color: lightgreen;
+
+/* Styles for the profile picture */
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
+
+/* Styles for the topic details */
+#topic-details {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#topic-author-name,
+#topic-created-at {
+    margin: 0 10px;
+}
+
+/* Existing message styles */
+.message {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+}
+
+.message p {
+    margin: 5px 0;
+}
+
+.message p strong {
+    font-size: 1.2em;
+    color: #333;
+}
+
+.message p em {
+    font-size: 0.9em;
+    color: #888;
+}
+
+.message p strong {
+    font-size: 1em;
+    color: #555;
+}
+
+.message .like-button, 
+.message .dislike-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.message .dislike-button {
+    background-color: #dc3545;
+}
+
+.message .like-button:hover {
+    background-color: #0056b3;
+}
+
+.message .dislike-button:hover {
+    background-color: #c82333;
+}
+
+.message .delete-message {
+    background-color: #ffc107;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.message .delete-message:hover {
+    background-color: #e0a800;
+}
+
+
+#pouce {
+    display: flex;
+    align-content: end;
+}
+
 
 .dislike-button {
-    background-color: lightcoral;
+    background: none;
+    border: none;
 }
 
 .like-button.active {

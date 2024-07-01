@@ -15,11 +15,17 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    document.getElementById('topic-title').textContent = data.topic.title;
-                    document.getElementById('topic-body').textContent = data.topic.body;
+                    const topic = data.topic;
+                    document.getElementById('topic-title').textContent = topic.title;
+                    document.getElementById('topic-body').textContent = topic.body;
+                    document.getElementById('topic-author-pic').src = topic.author_profile_pic;
+                    document.getElementById('topic-author-name').textContent = `Créé par: ${topic.author_name}`;
+                    document.getElementById('topic-created-at').textContent = `Créé le: ${new Date(topic.created_at).toLocaleString()}`;
 
-                    if (user.id === data.topic.author_id) {
+                    // Check if admin controls already exist before adding them
+                    if (user.id === topic.author_id && !document.getElementById('admin-controls')) {
                         const adminControls = document.createElement('div');
+                        adminControls.id = 'admin-controls';
                         adminControls.innerHTML = `
                             <button id="edit-topic">Modifier le Topic</button>
                             <button id="delete-topic">Supprimer le Topic</button>
@@ -60,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button class="dislike-button" data-message-id="${message.id}" data-type="dislike">Dislike</button>
                         `;
 
-                        if (user.id === data.topic.author_id || user.id === message.user_id) {
+                        if (user.id === topic.author_id || user.id === message.user_id) {
                             messageElement.insertAdjacentHTML('beforeend', `
                                 <button class="delete-message" data-message-id="${message.id}">Supprimer</button>
                             `);
@@ -69,10 +75,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         messagesContainer.appendChild(messageElement);
                     });
 
+                    // Remove existing event listeners before adding new ones
                     document.querySelectorAll('.delete-message').forEach(button => {
-                        button.addEventListener('click', function() {
+                        const clone = button.cloneNode(true);
+                        button.replaceWith(clone);
+                        clone.addEventListener('click', function() {
                             const messageId = this.getAttribute('data-message-id');
-
                             fetch(`http://localhost:3000/messages/${messageId}`, {
                                 method: 'DELETE'
                             })
@@ -90,7 +98,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
 
                     document.querySelectorAll('.like-button, .dislike-button').forEach(button => {
-                        button.addEventListener('click', function() {
+                        const clone = button.cloneNode(true);
+                        button.replaceWith(clone);
+                        clone.addEventListener('click', function() {
                             const messageId = this.getAttribute('data-message-id');
                             const type = this.getAttribute('data-type');
                             fetch('http://localhost:3000/like-message', {
@@ -111,6 +121,24 @@ document.addEventListener('DOMContentLoaded', function() {
                             .catch(error => console.error('Erreur:', error));
                         });
                     });
+
+                    // Manage pagination buttons
+                    const prevPageButton = document.getElementById('prev-page');
+                    const nextPageButton = document.getElementById('next-page');
+
+                    // Show or hide previous page button
+                    if (page > 1) {
+                        prevPageButton.style.display = 'inline-block';
+                    } else {
+                        prevPageButton.style.display = 'none';
+                    }
+
+                    // Show or hide next page button
+                    if (data.messages.length === 10) {
+                        nextPageButton.style.display = 'inline-block';
+                    } else {
+                        nextPageButton.style.display = 'none';
+                    }
                 } else {
                     alert(data.message);
                 }

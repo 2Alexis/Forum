@@ -96,8 +96,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p><a id="author" href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
                             </div>
                             <p><strong>Created at:</strong> ${new Date(topic.created_at).toLocaleString()}</p>
-                            <button class="like-button" data-topic-id="${topic.id}" data-type="like"><img src="pouchehaut.png" class="pouce"></button>
-                            <button class="dislike-button" data-topic-id="${topic.id}" data-type="dislike"><img src="pouchehaut.png" class="pouce"></button>
+                            <div id="pouces">
+                            <button class="like-button" data-topic-id="${topic.id}" data-type="like"><img class="pouce" src="poucehaut.png" class="pouce"></button>
+                            <button class="dislike-button" data-topic-id="${topic.id}" data-type="dislike"><img class="pouce" src="poucebas.png" class="pouce"></button>
+                            </div>
                         `;
                         topicsContainer.appendChild(topicElement);
                     });

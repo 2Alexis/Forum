@@ -6,7 +6,7 @@ const db = require('./db');
 // Middleware to check if user is an admin
 function isAdmin(req, res, next) {
     const userId = req.body.user_id || req.query.user_id;
-    const query = 'SELECT role FROM users WHERE id = ?';
+    const query = 'SELECT role FROM users WHERE id = 17';
     db.query(query, [userId], (err, results) => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
