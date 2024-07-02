@@ -15,16 +15,22 @@
             <li><a href="#" id="logout">Déconnexion</a></li>
         </ul>
     </nav>
+    <h1 id="topic-title"></h1>
     <div class="topic-container">
-        <h1 id="topic-title"></h1>
-        <div id="topic-details">
-            <img id="topic-author-pic" class="profile-pic" src="" alt="Profile Picture">
-            <p id="topic-author-name"></p>
-            <p id="topic-created-at"></p>
-        </div>
-        <p id="topic-body"></p>
+        
+        <div id="creathor-topic">
+            <div id="topic-details">
+                <a href="/home.html" ><img src="fleche.webp" id="flecheback"></a>
+                <img id="topic-author-pic" class="profile-pic" src="" alt="Profile Picture">
+                <p id="topic-author-name"></p>
+            </div>
+            
+            
+            <p id="topic-body"></p><p id="topic-created-at"></p>    
 
-        <label for="sort-order">Trier les messages par:</label>
+        </div>
+        
+
         <select id="sort-order">
             <option value="recent">Les plus récents</option>
             <option value="popular">Les plus populaires</option>
@@ -37,7 +43,7 @@
 
         <form id="addMessageForm">
             <textarea id="message-body" required></textarea>
-            <button type="submit">Ajouter un message</button>
+            <button  type="submit">Ajouter un message</button>
         </form>
     </div>
 </body>

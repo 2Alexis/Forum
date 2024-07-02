@@ -18,22 +18,28 @@
 </head>
 <body>
     <nav>
-        <ul>
+        <ul class="nav-left">
             <li><a href="home.html">Accueil</a></li>
+        </ul>
+        <ul class="nav-center">
             <li class="dropdown">
                 <a href="#">Catégories</a>
-                <div class="dropdown-content" id="categories-dropdown">
-                    <!-- Les catégories seront insérées ici -->
-                </div>
+                <div class="dropdown-content" id="categories-dropdown"></div>
             </li>
-            <li><a href="#" id="logout">Déconnexion</a></li>
+            <div class="search-bar-container">
+                <input type="text" id="search-bar" placeholder="Rechercher par tags...">
+                <button id="search-button">Rechercher</button>
+                <button id="reset-search-button" style="display:none;"><img src="croix.webp" id="croix"></button>
+            </div>
+            
+        </ul>
+        <ul class="nav-right">
+            <!-- Les éléments seront ajoutés dynamiquement par le JS -->
         </ul>
     </nav>
-    <h1>Bienvenue sur le forum</h1>
     <div id="main-site-container">
         <div id="container-main-left">
             <div id="top-left-container">
-                
                 <div id="liked">
                     <h1 class="text">Topics you like</h1>
                     <div id="liked-topics-container"></div>
@@ -59,8 +65,8 @@
                 <!-- Les topics seront insérés ici -->
             </div>
             <div id="pagination">
-                <button id="prev-page">Précédent</button>
-                <button id="next-page">Suivant</button>
+                <button class="button-styling" id="prev-page"><img class="fleche" src="gauche.png"></button>
+                <button class="button-styling" id="next-page"><img class="fleche" src="droite.webp"></button>
             </div>
         </div>
     </div>

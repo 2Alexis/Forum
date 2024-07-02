@@ -1,24 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     const user = JSON.parse(localStorage.getItem('user'));
     let currentPage = 1;
-    const navbar = document.querySelector('nav ul');
+    const navRight = document.querySelector('.nav-right');
 
     if (!user) {
-        navbar.innerHTML = `
-            <li><a href="home.html">Accueil</a></li>
+        navRight.innerHTML = `
             <li><a href="login.html">Connexion</a></li>
             <li><a href="index.html">Inscription</a></li>
         `;
     } else {
-        navbar.innerHTML = `
-            <li><a href="home.html">Accueil</a></li>
-            <li class="dropdown">
-                <a href="#">Catégories</a>
-                <div class="dropdown-content" id="categories-dropdown">
-                </div>
-            </li>
+        navRight.innerHTML = `
             <li><a href="profile.html?id=${user.id}" id="profile-link">Profil</a></li>
-            <li><a href="#" id="logout">Déconnexion</a></li>
+            <li><a href="#" id="logout"><img src="deco.png" id="deco" alt="Déconnexion"></a></li>
         `;
 
         document.getElementById('logout').addEventListener('click', function() {
@@ -32,9 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const profilePicContainer = document.getElementById('user-profile-pic-container');
-                    profilePicContainer.innerHTML = `
-                        <img src="${data.user.profile_pic}" alt="Profile Picture" class="profile-pic">
+                    const profileLink = document.getElementById('profile-link');
+                    profileLink.innerHTML = `
+                        <img src="${data.user.profile_pic}" alt="Profile Picture" class="profile-pic"> 
+                    `;
+                    const userProfilePicContainer = document.getElementById('user-profile-pic-container');
+                    userProfilePicContainer.innerHTML = `
+                        <img src="${data.user.profile_pic}" alt="Profile Picture" class="profile-pic"> 
                     `;
                 } else {
                     console.error('Erreur : ' + data.message);
@@ -58,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     const categoriesDropdown = document.getElementById('categories-dropdown');
+                    categoriesDropdown.innerHTML = ''; // Clear any existing categories
                     data.categories.forEach(category => {
                         const categoryElement = document.createElement('a');
                         categoryElement.href = `#`;
@@ -318,6 +316,80 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => console.error('Error:', error));
+    });
+
+    // Search functionality
+    const searchBar = document.getElementById('search-bar');
+    const searchButton = document.getElementById('search-button');
+    const resetSearchButton = document.getElementById('reset-search-button');
+    resetSearchButton.style.display = 'none'; // Hide reset button initially
+
+    searchButton.addEventListener('click', function() {
+        const searchQuery = searchBar.value.trim();
+        if (searchQuery) {
+            fetch(`http://localhost:3000/search-topics?tags=${encodeURIComponent(searchQuery)}`)
+                .then(handleError)
+                .then(data => {
+                    if (data.success) {
+                        const topicsContainer = document.getElementById('topics-container');
+                        topicsContainer.innerHTML = '';
+                        data.topics.forEach(topic => {
+                            const topicElement = document.createElement('div');
+                            topicElement.classList.add('topic');
+                            topicElement.innerHTML = `
+                                <h2><a id="title-topic" href="topic.html?id=${topic.id}">${topic.title}</a></h2>
+                                <p>${topic.body}</p>
+                                <div> ${createTagElements(topic.tags)}</div>
+                                <div id="user-info">
+                                    <img class="profile-pic" src="${topic.author_profile_pic}" alt="Profile Picture">
+                                    <p><a id="author" href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
+                                </div>
+                                <p><strong>Created at:</strong> ${new Date(topic.created_at).toLocaleString()}</p>
+                                <div id="pouces">
+                                <button class="like-button" data-topic-id="${topic.id}" data-type="like"><img class="pouce" src="poucehaut.png" class="pouce"></button>
+                                <button class="dislike-button" data-topic-id="${topic.id}" data-type="dislike"><img class="pouce" src="poucebas.png" class="pouce"></button>
+                                </div>
+                            `;
+                            topicsContainer.appendChild(topicElement);
+                        });
+                        document.querySelectorAll('.like-button, .dislike-button').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const topicId = this.getAttribute('data-topic-id');
+                                const type = this.getAttribute('data-type');
+                                fetch('http://localhost:3000/like', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ user_id: user.id, topic_id: topicId, type })
+                                })
+                                .then(handleError)
+                                .then(data => {
+                                    if (data.success) {
+                                        alert(`${type === 'like' ? 'Liked' : 'Disliked'} successfully!`);
+                                        loadTopics(currentPage);
+                                        updateLikedTopics();
+                                    } else {
+                                        alert('Erreur : ' + data.message);
+                                    }
+                                })
+                                .catch(error => console.error('Erreur:', error));
+                            });
+                        });
+                        resetSearchButton.style.display = 'block'; // Show reset button
+                    } else {
+                        console.error('Failed to search topics:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+
+    resetSearchButton.addEventListener('click', function() {
+        searchBar.value = '';
+        resetSearchButton.style.display = 'none';
+        loadTopics(currentPage);
+        window.location.href = 'home.html'; // Navigate to home page
     });
 
     loadCategories();

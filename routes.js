@@ -125,17 +125,19 @@ router.post('/login', (req, res) => {
     });
 });
 
-// Route pour créer un topic
+// Mise à jour de la route pour créer un topic pour inclure category_id
 router.post('/create-topic', (req, res) => {
-    const { title, body, tags, author_id, state } = req.body;
-    const query = 'INSERT INTO topics (title, body, tags, author_id, state) VALUES (?, ?, ?, ?, ?)';
-    db.query(query, [title, body, tags, author_id, state], (err, result) => {
+    const { title, body, tags, author_id, state, category_id } = req.body;
+    const query = 'INSERT INTO topics (title, body, tags, author_id, state, category_id) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(query, [title, body, tags, author_id, state, category_id], (err, result) => {
         if (err) {
+            console.error('Erreur lors de la création du topic:', err);
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
         res.status(201).json({ success: true, message: 'Topic créé avec succès' });
     });
 });
+
 
 // Route pour récupérer les topics avec pagination
 router.get('/topics', (req, res) => {
@@ -168,7 +170,7 @@ router.get('/topics/:id', (req, res) => {
 
     if (sortOrder === 'popular') {
         messagesQuery = `
-            SELECT m.*, u.username, 
+            SELECT m.*, u.username, u.profile_pic, 
             IFNULL((SELECT SUM(CASE WHEN type = 'like' THEN 1 WHEN type = 'dislike' THEN -1 ELSE 0 END) 
                     FROM message_likes 
                     WHERE message_id = m.id), 0) AS popularity
@@ -180,7 +182,7 @@ router.get('/topics/:id', (req, res) => {
         `;
     } else {
         messagesQuery = `
-            SELECT m.*, u.username, 
+            SELECT m.*, u.username, u.profile_pic, 
             IFNULL((SELECT SUM(CASE WHEN type = 'like' THEN 1 WHEN type = 'dislike' THEN -1 ELSE 0 END) 
                     FROM message_likes 
                     WHERE message_id = m.id), 0) AS popularity
@@ -214,6 +216,42 @@ router.get('/topics/:id', (req, res) => {
             }
             res.status(200).json({ success: true, topic: topicResults[0], messages: messageResults });
         });
+    });
+});
+
+router.get('/search-topics', (req, res) => {
+    const tags = req.query.tags.split(',').map(tag => tag.trim());
+    const query = `
+        SELECT t.*, u.username AS author_name, u.profile_pic AS author_profile_pic 
+        FROM topics t 
+        JOIN users u ON t.author_id = u.id 
+        WHERE ${tags.map(tag => `t.tags LIKE ?`).join(' AND ')}
+    `;
+    const params = tags.map(tag => `%${tag}%`);
+    db.query(query, params, (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la recherche de topics par tags:', err);
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+        res.status(200).json({ success: true, topics: results });
+    });
+});
+
+
+// Route pour mettre à jour le body du topic
+router.put('/topics/:id', (req, res) => {
+    const topicId = req.params.id;
+    const { body } = req.body;
+    if (!body) {
+        return res.status(400).json({ success: false, message: 'Le corps du topic ne peut pas être vide' });
+    }
+    const query = 'UPDATE topics SET body = ? WHERE id = ?';
+    db.query(query, [body, topicId], (err, result) => {
+        if (err) {
+            console.error('Erreur lors de la mise à jour du topic:', err);
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+        res.status(200).json({ success: true, message: 'Topic mis à jour avec succès' });
     });
 });
 
@@ -282,9 +320,11 @@ router.post('/like-message', (req, res) => {
     });
 });
 
-// Route pour ajouter un message à un topic
 router.post('/messages', (req, res) => {
     const { topic_id, user_id, body } = req.body;
+    if (!topic_id || !user_id || !body) {
+        return res.status(400).json({ success: false, message: 'Tous les champs sont requis' });
+    }
     const query = 'INSERT INTO messages (topic_id, user_id, body) VALUES (?, ?, ?)';
     db.query(query, [topic_id, user_id, body], (err, result) => {
         if (err) {
@@ -294,6 +334,7 @@ router.post('/messages', (req, res) => {
         res.status(201).json({ success: true, message: 'Message ajouté avec succès' });
     });
 });
+
 
 router.post('/like', (req, res) => {
     const { user_id, topic_id, type } = req.body;
@@ -425,6 +466,7 @@ router.get('/topics/category/:category_id', (req, res) => {
         res.status(200).json({ success: true, topics: results });
     });
 });
+
 
 
 

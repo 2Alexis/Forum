@@ -22,9 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('topic-author-name').textContent = `Créé par: ${topic.author_name}`;
                     document.getElementById('topic-created-at').textContent = `Créé le: ${new Date(topic.created_at).toLocaleString()}`;
 
-                    // Check if admin controls already exist before adding them
-                    if (user.id === topic.author_id && !document.getElementById('admin-controls')) {
-                        const adminControls = document.createElement('div');
+                    // Vérifiez si les boutons d'administration existent déjà
+                    let adminControls = document.getElementById('admin-controls');
+                    if (user.id === topic.author_id && !adminControls) {
+                        adminControls = document.createElement('div');
                         adminControls.id = 'admin-controls';
                         adminControls.innerHTML = `
                             <button id="edit-topic">Modifier le Topic</button>
@@ -33,7 +34,44 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById('topic-body').after(adminControls);
 
                         document.getElementById('edit-topic').addEventListener('click', () => {
-                            // Ajouter les fonctionnalités de modification ici
+                            const currentBody = document.getElementById('topic-body').textContent;
+                            const editForm = document.createElement('div');
+                            editForm.innerHTML = `
+                                <textarea id="edit-body">${currentBody}</textarea>
+                                <button id="save-edit">Enregistrer</button>
+                                <button id="cancel-edit">Annuler</button>
+                            `;
+                            document.getElementById('topic-body').replaceWith(editForm);
+
+                            document.getElementById('save-edit').addEventListener('click', () => {
+                                const newBody = document.getElementById('edit-body').value.trim();
+                                if (!newBody) {
+                                    alert('Le corps du message ne peut pas être vide.');
+                                    return;
+                                }
+
+                                fetch(`http://localhost:3000/topics/${topicId}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ body: newBody })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert('Topic mis à jour avec succès !');
+                                        loadTopicAndMessages(sortOrderSelect.value, currentPage);
+                                    } else {
+                                        alert('Erreur : ' + data.message);
+                                    }
+                                })
+                                .catch(error => console.error('Erreur:', error));
+                            });
+
+                            document.getElementById('cancel-edit').addEventListener('click', () => {
+                                loadTopicAndMessages(sortOrderSelect.value, currentPage);
+                            });
                         });
 
                         document.getElementById('delete-topic').addEventListener('click', () => {
@@ -59,11 +97,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         const messageElement = document.createElement('div');
                         messageElement.classList.add('message');
                         messageElement.innerHTML = `
-                            <p><strong>${message.username}:</strong> ${message.body}</p>
+                            <div id="message-header">
+                                <img class="profile-pic" src="${message.profile_pic}" alt="Profile Picture">
+                                <p>${message.username}</p>
+                            </div>
+                            <div id="message">
+                                <p id="message-text">${message.body}</p>
+                            </div>
                             <p><em>Posté le ${new Date(message.created_at).toLocaleString()}</em></p>
                             <p id="popularite"><strong>Popularité:</strong> ${message.popularity || 0}</p>
+                            <div id="likes">
                             <button class="like-button" data-message-id="${message.id}" data-type="like">Like</button>
                             <button class="dislike-button" data-message-id="${message.id}" data-type="dislike">Dislike</button>
+                            </div>
                         `;
 
                         if (user.id === topic.author_id || user.id === message.user_id) {
@@ -75,12 +121,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         messagesContainer.appendChild(messageElement);
                     });
 
-                    // Remove existing event listeners before adding new ones
                     document.querySelectorAll('.delete-message').forEach(button => {
-                        const clone = button.cloneNode(true);
-                        button.replaceWith(clone);
-                        clone.addEventListener('click', function() {
+                        button.addEventListener('click', function() {
                             const messageId = this.getAttribute('data-message-id');
+
                             fetch(`http://localhost:3000/messages/${messageId}`, {
                                 method: 'DELETE'
                             })
@@ -98,9 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
 
                     document.querySelectorAll('.like-button, .dislike-button').forEach(button => {
-                        const clone = button.cloneNode(true);
-                        button.replaceWith(clone);
-                        clone.addEventListener('click', function() {
+                        button.addEventListener('click', function() {
                             const messageId = this.getAttribute('data-message-id');
                             const type = this.getAttribute('data-type');
                             fetch('http://localhost:3000/like-message', {
@@ -153,7 +195,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('addMessageForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const body = document.getElementById('message-body').value;
+        const body = document.getElementById('message-body').value.trim();
+        if (!body) {
+            alert('Le corps du message ne peut pas être vide.');
+            return;
+        }
+
         fetch('http://localhost:3000/messages', {
             method: 'POST',
             headers: {
@@ -165,6 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success) {
                 alert('Message ajouté avec succès !');
+                document.getElementById('message-body').value = ''; // Clear the input field
                 loadTopicAndMessages(sortOrderSelect.value, currentPage);
             } else {
                 alert('Erreur : ' + data.message);
