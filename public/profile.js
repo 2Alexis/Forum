@@ -1,27 +1,52 @@
 document.addEventListener('DOMContentLoaded', function() {
     const user = JSON.parse(localStorage.getItem('user'));
+    const userId = new URLSearchParams(window.location.search).get('id'); // Get the user ID from the URL
+
     if (!user) {
         // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
         window.location.href = 'login.html';
         return;
     }
 
-    fetch(`http://localhost:3000/user/${user.id}`)
+    fetch(`http://localhost:3000/user/${userId}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                const isOwner = user.id === data.user.id;
+
                 document.getElementById('username-display').textContent = data.user.username;
-                document.getElementById('email-display').textContent = data.user.email;
                 document.getElementById('biographie-display').textContent = data.user.biographie;
                 document.getElementById('profile_pic').src = `${data.user.profile_pic}`;
-                document.getElementById('friendship_status').textContent = data.user.friendship_status;
                 document.getElementById('last_login').textContent = new Date(data.user.last_login).toLocaleString();
 
-                document.getElementById('username').value = data.user.username;
-                document.getElementById('email').textContent = data.user.email;
-                document.getElementById('biographie').value = data.user.biographie;
-                document.getElementById('profile_pic_input').value = data.user.profile_pic;
-                loadFriends();
+                if (isOwner) {
+                    document.getElementById('email-display').textContent = data.user.email;
+                    document.getElementById('username').value = data.user.username;
+                    document.getElementById('email').textContent = data.user.email;
+                    document.getElementById('biographie').value = data.user.biographie;
+                    document.getElementById('profile_pic_input').value = data.user.profile_pic;
+                    document.getElementById('editProfileButton').style.display = 'block';
+                } else {
+                    document.getElementById('email-display').parentElement.style.display = 'none';
+                    document.getElementById('editProfileButton').style.display = 'none';
+                }
+
+                // Fetch friendship status
+                fetch(`http://localhost:3000/friendship-status?user_id=${user.id}&other_user_id=${userId}`)
+                    .then(response => response.json())
+                    .then(friendshipData => {
+                        if (friendshipData.success) {
+                            document.getElementById('friendship_status').textContent = friendshipData.status;
+                            if (!isOwner && friendshipData.status === 'none') {
+                                document.getElementById('addFriendButton').style.display = 'block';
+                            }
+                        } else {
+                            console.error('Erreur lors de la vérification du statut d\'amitié:', friendshipData.message);
+                        }
+                    })
+                    .catch(error => console.error('Erreur:', error));
+
+                loadFriends(userId); // Pass the userId to loadFriends function
             } else {
                 alert('Erreur : ' + data.message);
             }
@@ -84,19 +109,45 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    function loadFriends() {
-        fetch(`http://localhost:3000/friends/${user.id}`)
+    document.getElementById('addFriendButton').addEventListener('click', function() {
+        fetch('http://localhost:3000/send-friend-request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ requester_id: user.id, receiver_id: userId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Demande d\'ami envoyée avec succès !');
+                document.getElementById('addFriendButton').style.display = 'none';
+                document.getElementById('friendship_status').textContent = 'pending';
+            } else {
+                alert('Erreur : ' + data.message);
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+    });
+
+    function loadFriends(userId) {
+        console.log("Loading friends..."); // Debug log
+        fetch(`http://localhost:3000/friends/${userId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     const friendsListContainer = document.getElementById('friendsListContainer');
                     friendsListContainer.innerHTML = '';
                     data.friends.forEach(friend => {
-                        const friendItem = document.createElement('li');
+                        const friendItem = document.createElement('div');
                         friendItem.innerHTML = `
+                        <div id="friend-container">
+                            <div id="left-friend">
                             <img src="${friend.profile_pic}" alt="Profile Image" class="friend-pic">
                             <span>${friend.username}</span>
-                            <button class="remove-friend" data-friend-id="${friend.id}">Supprimer</button>
+                            </div>
+                            <button class="remove-friend" id="white-button" data-friend-id="${friend.id}">Supprimer l'amitiée</button>
+                            </div>
                         `;
                         friendsListContainer.appendChild(friendItem);
                     });
@@ -154,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success) {
                 alert('Ami supprimé avec succès !');
-                loadFriends();
+                loadFriends(userId); // Pass the userId to loadFriends function
             } else {
                 alert('Erreur : ' + data.message);
             }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="index.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const user = JSON.parse(localStorage.getItem('user'));
@@ -56,12 +56,14 @@
         <input type="password" id="password" name="password" required><br><br>
 
         <input type="hidden" id="profile_pic" name="profile_pic">
-
-        <label for="profileImage">Photo de profil :</label><br>
-        <img id="profileImage" src="" alt="Profile Image" style="width: 100px; height: 100px;"><br>
-        <button type="button" id="nextProfileImage">Changer de photo</button><br><br>
+        <div id="image-choose">
+            <label for="profileImage">Photo de profil :</label><br>
+            <img id="profileImage" src="" alt="Profile Image" style="width: 100px; height: 100px;"><br>
+            <button type="button" id="nextProfileImage">Changer de photo</button><br><br>
+        
 
         <button type="submit">S'inscrire</button>
+    </div>  
     </form>
 
     <button id="loginButton">Connexion</button>

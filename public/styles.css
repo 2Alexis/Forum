@@ -12,11 +12,12 @@ body {
 }
 
 #liked {
-    font-size: 30px;
+    font-size: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 7px;
+    text-align: center;
+    gap: 23px;
 }
 
 #show-all-liked-topics {
@@ -53,6 +54,8 @@ nav ul {
 
 .nav-left {
     flex: 1;
+    display: flex;
+    text-align: center;
 }
 
 .nav-center {
@@ -129,12 +132,15 @@ h1 {
 }
 
 .topic {
+    gap: 6px;
+    flex-direction: column;
     border: 1px solid #ccc;
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;
     background-color: #262D35;
     width: 1000px;
+    display: flex;
 }
 
 .topic h2 {
@@ -246,6 +252,33 @@ footer {
     width: 180px;
 }
 
+#logo {
+    width:120px;
+}
+
+#logo:hover {
+    transform: scale(1.1);
+}
+
+#aimer {
+    font-size: 20px;
+    
+}
+
+#header-topic {
+    display: flex;
+    width:1800px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#logo-link {
+    background: none;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .box__footer .terms {
     max-width: 350px;
     margin-top: 20px;
@@ -290,6 +323,8 @@ footer {
 
 #pagination {
     margin-left: 20px;
+    display: flex;
+    gap:10px;
 }
 
 #deco {
@@ -377,7 +412,7 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 29px;
     margin-top: -30px;
 }
 
@@ -708,6 +743,10 @@ h1 {
 #pouce {
     display: flex;
     align-content: end;
+}
+
+.pouce:hover {
+    transform: scale(1.05);
 }
 
 .pouce2 {

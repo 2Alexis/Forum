@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const user = JSON.parse(localStorage.getItem('user'));
-    let currentPage = 1;
     const navRight = document.querySelector('.nav-right');
+    let currentPage = 1; // Ajout de la déclaration de currentPage
 
     if (!user) {
         navRight.innerHTML = `
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         navRight.innerHTML = `
             <li><a href="profile.html?id=${user.id}" id="profile-link">Profil</a></li>
+            <li><a href="#" id="friend-requests">Demandes d'amis</a></li>
             <li><a href="#" id="logout"><img src="deco.png" id="deco" alt="Déconnexion"></a></li>
         `;
 
@@ -18,6 +19,83 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('user');
             alert('Vous avez été déconnecté.');
             window.location.href = 'login.html';
+        });
+
+        document.getElementById('friend-requests').addEventListener('click', function() {
+            fetch(`http://localhost:3000/pending-friend-requests/${user.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let requestsList = '';
+                        data.requests.forEach(request => {
+                            requestsList += `
+                                <div class="friend-request">
+                                    <img src="${request.profile_pic}" alt="${request.username}">
+                                    <p>${request.username}</p>
+                                    <button class="accept-request" data-id="${request.requester_id}">Accepter</button>
+                                    <button class="reject-request" data-id="${request.requester_id}">Rejeter</button>
+                                </div>
+                            `;
+                        });
+                        const popup = document.createElement('div');
+                        popup.classList.add('popup');
+                        popup.innerHTML = `
+                            <div class="popup-content">
+                                <span class="close-button">&times;</span>
+                                ${requestsList}
+                            </div>
+                        `;
+                        document.body.appendChild(popup);
+                        document.querySelector('.close-button').addEventListener('click', function() {
+                            document.body.removeChild(popup);
+                        });
+                        document.querySelectorAll('.accept-request').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const requesterId = this.getAttribute('data-id');
+                                fetch('http://localhost:3000/accept-friend-request', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ requester_id: requesterId, receiver_id: user.id })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert('Demande d\'ami acceptée.');
+                                        this.parentElement.style.display = 'none'; // Masquer la demande acceptée
+                                    } else {
+                                        alert('Erreur : ' + data.message);
+                                    }
+                                });
+                            });
+                        });
+                        document.querySelectorAll('.reject-request').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const requesterId = this.getAttribute('data-id');
+                                fetch('http://localhost:3000/reject-friend-request', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ requester_id: requesterId, receiver_id: user.id })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert('Demande d\'ami rejetée.');
+                                        this.parentElement.style.display = 'none'; // Masquer la demande rejetée
+                                    } else {
+                                        alert('Erreur : ' + data.message);
+                                    }
+                                });
+                            });
+                        });
+                    } else {
+                        console.error('Failed to load friend requests:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         });
 
         // Fetch and display the profile picture
@@ -92,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div> ${createTagElements(topic.tags)}</div>
                             <div id="user-info">
                                 <img class="profile-pic" src="${topic.author_profile_pic}" alt="Profile Picture">
-                                <p><a id="author" href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
+                                <p><a id="author" href="profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
                             </div>
                             <p><strong>Created at:</strong> ${new Date(topic.created_at).toLocaleString()}</p>
                             <div id="pouces">
@@ -102,6 +180,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         `;
                         topicsContainer.appendChild(topicElement);
                     });
+
+                    document.getElementById('prev-page').style.display = currentPage > 1 ? 'block' : 'none';
+                    document.getElementById('next-page').style.display = data.topics.length === 6 ? 'block' : 'none';
+
                     document.querySelectorAll('.like-button, .dislike-button').forEach(button => {
                         button.addEventListener('click', function() {
                             const topicId = this.getAttribute('data-topic-id');
@@ -145,19 +227,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         const topicElement = document.createElement('div');
                         topicElement.classList.add('topic');
                         topicElement.innerHTML = `
-                            <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
+                            <h2><a id="title-topic" href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                             <p>${topic.body}</p>
-                            <div><strong>Tags:</strong> ${createTagElements(topic.tags)}</div>
-                            <div>
-                                <img src="${topic.author_profile_pic}" alt="Profile Picture">
-                                <p><a href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
+                            <div> ${createTagElements(topic.tags)}</div>
+                            <div id="user-info">
+                                <img class="profile-pic" src="${topic.author_profile_pic}" alt="Profile Picture">
+                                <p><a id="author" href="profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
                             </div>
                             <p><strong>Created at:</strong> ${new Date(topic.created_at).toLocaleString()}</p>
-                            <button class="like-button" data-topic-id="${topic.id}" data-type="like">Like</button>
-                            <button class="dislike-button" data-topic-id="${topic.id}" data-type="dislike">Dislike</button>
+                            <div id="pouces">
+                            <button class="like-button" data-topic-id="${topic.id}" data-type="like"><img class="pouce" src="poucehaut.png" class="pouce"></button>
+                            <button class="dislike-button" data-topic-id="${topic.id}" data-type="dislike"><img class="pouce" src="poucebas.png" class="pouce"></button>
+                            </div>
                         `;
                         topicsContainer.appendChild(topicElement);
                     });
+
+                    document.getElementById('prev-page').style.display = currentPage > 1 ? 'block' : 'none';
+                    document.getElementById('next-page').style.display = data.topics.length === 6 ? 'block' : 'none';
+
                     document.querySelectorAll('.like-button, .dislike-button').forEach(button => {
                         button.addEventListener('click', function() {
                             const topicId = this.getAttribute('data-topic-id');
@@ -188,7 +276,6 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => console.error('Error:', error));
     }
-    
 
     document.getElementById('prev-page').addEventListener('click', function() {
         if (currentPage > 1) {
@@ -214,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data.topics.length > 0) {
                         const topic = data.topics[0]; // Get only the first popular topic
                         popularTopicsContainer.innerHTML = `
-                            <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
+                            <h2><a id="liked" href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                         `;
                     } else {
                         popularTopicsContainer.innerHTML = '<p>Aucun topic populaire.</p>';
@@ -274,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <h2><a id="liked" href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                         `;
                     } else {
-                        likedTopicsContainer.innerHTML = '<p>Vous n\'avez aimé aucun topic.</p>';
+                        likedTopicsContainer.innerHTML = '<p id="aimer">Vous n\'avez aimé aucun topic.</p>';
                     }
                 } else {
                     console.error('Failed to load liked topics:', data.message);
@@ -327,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
     searchButton.addEventListener('click', function() {
         const searchQuery = searchBar.value.trim();
         if (searchQuery) {
-            fetch(`http://localhost:3000/search-topics?tags=${encodeURIComponent(searchQuery)}`)
+            fetch(`http://localhost:3000/search-topics?title=${encodeURIComponent(searchQuery)}`)
                 .then(handleError)
                 .then(data => {
                     if (data.success) {
@@ -342,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div> ${createTagElements(topic.tags)}</div>
                                 <div id="user-info">
                                     <img class="profile-pic" src="${topic.author_profile_pic}" alt="Profile Picture">
-                                    <p><a id="author" href="user-profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
+                                    <p><a id="author" href="profile.html?id=${topic.author_id}">${topic.author_name}</a></p>
                                 </div>
                                 <p><strong>Created at:</strong> ${new Date(topic.created_at).toLocaleString()}</p>
                                 <div id="pouces">

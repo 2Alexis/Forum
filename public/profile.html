@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil</title>
     <link rel="stylesheet" href="profile.css">
-    <script src="profile.js"></script>
 </head>
 <body>
     <nav>
@@ -15,46 +14,49 @@
             <li><a href="#" id="logout">Déconnexion</a></li>
         </ul>
     </nav>
-    <div class="profile-container">
-        <h1>Profil de l'utilisateur</h1>
-        <div id="profileDisplay">
-            <img id="profile_pic" src="" alt="Profile Image" class="profile-pic"><br>
-            <p><strong>Nom d'utilisateur :</strong> <span id="username-display"></span></p>
-            <p><strong>Email :</strong> <span id="email-display"></span></p>
-            <p><strong>Biographie :</strong> <span id="biographie-display"></span></p>
-            <p><strong>Statut d'amitié :</strong> <span id="friendship_status"></span></p>
-            <p><strong>Dernière connexion :</strong> <span id="last_login"></span></p>
-            <button id="editProfileButton">Modifier le profil</button>
-        </div>
-        <div id="profileEdit" style="display: none;">
-            <form id="updateProfileForm">
-                <button type="button" id="changeProfilePic">Changer de photo</button>
-                <input type="hidden" id="profile_pic_input" name="profile_pic_input"><br><br>
-
-                <label for="username">Nom d'utilisateur :</label>
-                <input type="text" id="username" name="username" required><br><br>
-
-                <label for="biographie">Biographie :</label>
-                <textarea id="biographie" name="biographie" required></textarea><br><br>
-
-                <p><strong>Email :</strong> <span id="email"></span></p>
+    <div id="container">
+        <div class="profile-container">
+            <h1>Profil de l'utilisateur</h1>
+            <div id="profileDisplay">
+                <img id="profile_pic" src="" alt="Profile Image" class="profile-pic"><br>
+                <p><strong>Nom d'utilisateur :</strong> <span id="username-display"></span></p>
+                <p><strong>Email :</strong> <span id="email-display"></span></p>
+                <p><strong>Biographie :</strong> <span id="biographie-display"></span></p>
                 <p><strong>Statut d'amitié :</strong> <span id="friendship_status"></span></p>
                 <p><strong>Dernière connexion :</strong> <span id="last_login"></span></p>
+                <button id="editProfileButton" class="white-button">Modifier le profil</button>
+                <button id="addFriendButton" class="white-button" style="display: none;">Ajouter en ami</button>
+            </div>
+            <div id="profileEdit" style="display: none;">
+                <form id="updateProfileForm">
+                    <button type="button" class="white-button" id="changeProfilePic" >Changer de photo</button>
+                    <input type="hidden" id="profile_pic_input" name="profile_pic_input"><br><br>
 
-                <button type="submit">Enregistrer les modifications</button>
-            </form>
-        </div>
-        <div id="friendsList">
-            <h2>Liste d'amis</h2>
-            <ul id="friendsListContainer"></ul>
+                    <label for="username">Nom d'utilisateur :</label>
+                    <input type="text" id="username" name="username" required><br><br>
+
+                    <label for="biographie">Biographie :</label>
+                    <textarea id="biographie" name="biographie" required></textarea><br><br>
+
+                    <p><strong>Email :</strong> <span id="email"></span></p>
+                    <p><strong>Statut d'amitié :</strong> <span id="friendship_status"></span></p>
+                    <p><strong>Dernière connexion :</strong> <span id="last_login"></span></p>
+
+                    <button id="white-button" class="white-button" type="submit">Enregistrer les modifications</button>
+                </form>
+            </div>
+            <div id="friendsList">
+                <h2>Liste d'amis</h2>
+                <ul id="friendsListContainer"></ul>
+            </div>
         </div>
     </div>
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p>Voulez-vous vraiment supprimer cet ami ?</p>
-            <button id="confirmDelete">Confirmer</button>
-            <button id="cancelDelete">Annuler</button>
+            <p>Are you sure you want to remove this friend?</p>
+            <button id="confirmDelete">Confirm</button>
+            <button id="cancelDelete">Cancel</button>
         </div>
     </div>
     <script src="profile.js"></script>

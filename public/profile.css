@@ -1,13 +1,111 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+@font-face {
+    font-family: rubik;
+    src: url(SpaceGrotesk-VariableFont_wght.ttf);
 }
 
+body {
+    font-family: rubik;
+    margin: 0;
+    padding: 0;
+    background-color: #1F262E;
+    color: white;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* S'assure que le container prend toute la hauteur de la fenêtre */
+    background-color: #1F262E; /* Fond sombre pour correspondre à votre thème */
+}
+
+
+.white-button {
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
+    border: 2px solid #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.white-button:hover {
+    background-color: #939393;
+    border-color: #555;
+}
+
+.white-button:active {
+    background-color: #e6e6e6;
+    border-color: #777;
+}
+
+.white-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+#white-button {
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
+    border: 2px solid #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#white-button:hover {
+    background-color: #939393;
+    border-color: #555;
+}
+
+#white-button:active {
+    background-color: #e6e6e6;
+    border-color: #777;
+}
+
+#white-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+
+.profile-container {
+    background-color: #262D35; /* Fond légèrement plus clair pour le conteneur de profil */
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.profile-container h1, .profile-container h2 {
+    text-align: center;
+}
+
+.profile-container img.profile-pic {
+    display: block;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+}
+
+
 nav {
-    background-color: #333;
+    background-color: #262D35;
     padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 nav ul {
@@ -15,7 +113,26 @@ nav ul {
     margin: 0;
     padding: 0;
     display: flex;
+    align-items: center;
+}
+
+.nav-left {
+    flex: 1;
+    display: flex;
+    text-align: center;
+}
+
+.nav-center {
+    
+    display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+.nav-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 nav ul li {
@@ -34,62 +151,69 @@ nav ul li a:hover {
     background-color: #575757;
 }
 
-.profile-container {
-    width: 60%;
-    margin: 50px auto;
+.nav-center input[type="text"] {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
     padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.profile-container h1 {
+    border: 1px solid #888;
+    width: 34%;
+    color: black;
     text-align: center;
-    color: #333;
 }
 
-.profile-pic {
-    display: block;
-    margin: 0 auto 20px;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
+#friend-container {
+    display: flex;
+    align-items: center;
+
+
 }
 
-.profile-container p, label {
-    font-size: 18px;
-    line-height: 1.6;
+#left-friend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10px;
+
 }
 
-.profile-container input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+
+.friend-pic {
+width: 80px;
+border-radius: 50%;
+height:80px;
 }
 
-.profile-container button {
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 5px;
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
-
-.profile-container button:hover {
-    background-color: #575757;
-}
-.message .dislike-button {
-    background-color: #dc3545;
-}
-
-.message .like-button:hover {
-    background-color: #0056b3;
-}
-
-.message .dislike-button:hover {
-    background-color: #c82333;
-}   

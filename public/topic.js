@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('topic-title').textContent = topic.title;
                     document.getElementById('topic-body').textContent = topic.body;
                     document.getElementById('topic-author-pic').src = topic.author_profile_pic;
-                    document.getElementById('topic-author-name').textContent = `Créé par: ${topic.author_name}`;
-                    document.getElementById('topic-created-at').textContent = `Créé le: ${new Date(topic.created_at).toLocaleString()}`;
+                    document.getElementById('topic-author-name').textContent = `${topic.author_name}`;
+                    document.getElementById('topic-created-at').textContent = `Posté le: ${new Date(topic.created_at).toLocaleString()}`;
 
                     // Vérifiez si les boutons d'administration existent déjà
                     let adminControls = document.getElementById('admin-controls');

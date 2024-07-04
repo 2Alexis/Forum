@@ -220,22 +220,22 @@ router.get('/topics/:id', (req, res) => {
 });
 
 router.get('/search-topics', (req, res) => {
-    const tags = req.query.tags.split(',').map(tag => tag.trim());
+    const title = req.query.title ? `%${req.query.title}%` : '%';
     const query = `
         SELECT t.*, u.username AS author_name, u.profile_pic AS author_profile_pic 
         FROM topics t 
         JOIN users u ON t.author_id = u.id 
-        WHERE ${tags.map(tag => `t.tags LIKE ?`).join(' AND ')}
+        WHERE t.title LIKE ?
     `;
-    const params = tags.map(tag => `%${tag}%`);
-    db.query(query, params, (err, results) => {
+    db.query(query, [title], (err, results) => {
         if (err) {
-            console.error('Erreur lors de la recherche de topics par tags:', err);
+            console.error('Erreur lors de la recherche de topics par titre:', err);
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
         res.status(200).json({ success: true, topics: results });
     });
 });
+
 
 
 // Route pour mettre à jour le body du topic
@@ -499,7 +499,6 @@ router.put('/user/:id', (req, res) => {
     });
 });
 
-// Route pour envoyer une demande d'ami
 router.post('/send-friend-request', (req, res) => {
     const { requester_id, receiver_id } = req.body;
     const query = 'INSERT INTO friendships (requester_id, receiver_id, status) VALUES (?, ?, "pending")';
@@ -511,17 +510,27 @@ router.post('/send-friend-request', (req, res) => {
     });
 });
 
+
 // Route pour accepter une demande d'ami
 router.post('/accept-friend-request', (req, res) => {
     const { requester_id, receiver_id } = req.body;
     const query = 'UPDATE friendships SET status = "accepted" WHERE requester_id = ? AND receiver_id = ?';
+
     db.query(query, [requester_id, receiver_id], (err, result) => {
         if (err) {
+            console.error('Erreur lors de l\'acceptation de la demande d\'ami:', err);
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
+
+        if (result.affectedRows === 0) {
+            return res.status(400).json({ success: false, message: 'Demande d\'ami non trouvée' });
+        }
+
         res.status(200).json({ success: true, message: 'Demande d\'ami acceptée avec succès' });
     });
 });
+
+
 
 // Route pour rejeter une demande d'ami
 router.post('/reject-friend-request', (req, res) => {
@@ -554,10 +563,11 @@ router.get('/friendship-status', (req, res) => {
 router.get('/friends/:user_id', (req, res) => {
     const userId = req.params.user_id;
     const query = `
-        SELECT DISTINCT u.id, u.username, u.email, u.profile_pic 
+        SELECT u.id, u.username, u.email, u.profile_pic 
         FROM friendships f
-        JOIN users u ON (f.requester_id = u.id OR f.receiver_id = u.id)
-        WHERE (f.requester_id = ? OR f.receiver_id = ?) AND u.id != ? AND f.status = 'accepted'
+        JOIN users u ON (f.requester_id = u.id AND f.receiver_id = ?) 
+                    OR (f.receiver_id = u.id AND f.requester_id = ?)
+        WHERE f.status = 'accepted' AND u.id != ?
     `;
     db.query(query, [userId, userId, userId], (err, results) => {
         if (err) {
@@ -567,6 +577,7 @@ router.get('/friends/:user_id', (req, res) => {
         res.status(200).json({ success: true, friends: results });
     });
 });
+
 
 // Route pour récupérer les demandes d'amis en attente
 router.get('/pending-friend-requests/:user_id', (req, res) => {
