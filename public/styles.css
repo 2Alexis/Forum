@@ -18,6 +18,11 @@ body {
     align-items: center;
     text-align: center;
     gap: 23px;
+    color: grey;
+}
+
+#liked:hover {
+    color:rgb(0, 0, 172);
 }
 
 #show-all-liked-topics {
@@ -363,6 +368,7 @@ footer {
     margin-top: 50px;
     justify-content: center;
     justify-content: space-evenly;
+    margin-bottom: 50px;
 }
 
 #container-right {
@@ -398,11 +404,7 @@ footer {
     margin-top: 30px;
 }
 
-#separation {
-    border: solid black 1px;
-    width: 80%;
-    margin-left: 28px;
-}
+
 
 #top-left-container {
     color: rgb(0, 0, 0);
@@ -808,6 +810,9 @@ h1 {
 
 .popup-content {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap:20px;
 }
 
 /* Style pour le bouton de fermeture */
@@ -828,6 +833,14 @@ h1 {
     color: white;
     border-radius: 20px;
     width: 170px;
+}
+
+#show-all-popular-topics:hover {
+    transform: scale(1.05);
+}
+
+#show-all-liked-topics:hover {
+    transform: scale(1.05);
 }
 
 .popup .close-button {

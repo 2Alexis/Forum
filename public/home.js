@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const user = JSON.parse(localStorage.getItem('user'));
     const navRight = document.querySelector('.nav-right');
     let currentPage = 1; // Ajout de la déclaration de currentPage
+    let currentPopup = null; // Suivi du popup actuellement ouvert
 
     if (!user) {
         navRight.innerHTML = `
@@ -291,6 +292,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadTopics(currentPage);
 
+    function closeCurrentPopup() {
+        if (currentPopup) {
+            document.body.removeChild(currentPopup);
+            currentPopup = null;
+        }
+    }
+
     function loadPopularTopics() {
         fetch('http://localhost:3000/popular-topics')
             .then(handleError)
@@ -320,12 +328,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(handleError)
             .then(data => {
                 if (data.success) {
+                    closeCurrentPopup(); // Fermer le popup actuel avant d'ouvrir le nouveau
                     let topicsList = '';
                     data.topics.forEach(topic => {
                         topicsList += `
                             <div>
                                 <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
-                                <p>${topic.body}</p>
+                                <p id="separation"></p>
                             </div>
                         `;
                     });
@@ -338,8 +347,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     `;
                     document.body.appendChild(popup);
+                    currentPopup = popup; // Définir le popup actuel
                     document.querySelector('.close-button').addEventListener('click', function() {
                         document.body.removeChild(popup);
+                        currentPopup = null; // Réinitialiser le popup actuel
                     });
                 } else {
                     console.error('Failed to load popular topics:', data.message);
@@ -377,6 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(handleError)
             .then(data => {
                 if (data.success) {
+                    closeCurrentPopup(); // Fermer le popup actuel avant d'ouvrir le nouveau
                     let topicsList = '';
                     data.topics.forEach(topic => {
                         topicsList += `
@@ -395,8 +407,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     `;
                     document.body.appendChild(popup);
+                    currentPopup = popup; // Définir le popup actuel
                     document.querySelector('.close-button').addEventListener('click', function() {
                         document.body.removeChild(popup);
+                        currentPopup = null; // Réinitialiser le popup actuel
                     });
                 } else {
                     console.error('Failed to load liked topics:', data.message);
