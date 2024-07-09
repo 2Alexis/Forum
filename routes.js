@@ -514,6 +514,37 @@ router.get('/user/:id', (req, res) => {
 });
 
 
+router.get('/user/:id/topics', (req, res) => {
+    const userId = req.params.id;
+    const viewerId = req.query.viewerId; // ID of the user viewing the profile
+    const page = parseInt(req.query.page) || 1;
+    const limit = 6;
+    const offset = (page - 1) * limit;
+
+    const query = `
+        SELECT t.*, u.username AS author_name, u.profile_pic AS author_profile_pic
+        FROM topics t
+        JOIN users u ON t.author_id = u.id
+        LEFT JOIN friendships f ON (f.requester_id = ? AND f.receiver_id = t.author_id AND f.status = 'accepted') 
+                                OR (f.receiver_id = ? AND f.requester_id = t.author_id AND f.status = 'accepted')
+        WHERE t.author_id = ? AND (t.is_private = 0 OR f.status = 'accepted' OR t.author_id = ?)
+        LIMIT ? OFFSET ?
+    `;
+
+    db.query(query, [viewerId, viewerId, userId, viewerId, limit, offset], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération des topics:', err);
+            return res.status(500).json({ success: false, message: 'Erreur serveur' });
+        }
+        res.status(200).json({ success: true, topics: results });
+    });
+});
+
+
+
+
+
+
 // Route pour mettre à jour les informations de l'utilisateur
 router.put('/user/:id', (req, res) => {
     const userId = req.params.id;

@@ -1,0 +1,492 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1:3306
+-- Généré le : mar. 09 juil. 2024 à 15:41
+-- Version du serveur : 8.3.0
+-- Version de PHP : 8.2.18
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données : `msg`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE IF NOT EXISTS `categories` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`) VALUES
+(1, 'Informatique'),
+(2, 'Jeux vidéos'),
+(3, 'Sport'),
+(4, 'Programming'),
+(5, 'Web Development'),
+(6, 'Data Science'),
+(7, 'DevOps'),
+(8, 'Design');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `friendships`
+--
+
+DROP TABLE IF EXISTS `friendships`;
+CREATE TABLE IF NOT EXISTS `friendships` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `requester_id` int DEFAULT NULL,
+  `receiver_id` int DEFAULT NULL,
+  `status` enum('pending','accepted','rejected') DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `requester_id` (`requester_id`),
+  KEY `receiver_id` (`receiver_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `friendships`
+--
+
+INSERT INTO `friendships` (`id`, `requester_id`, `receiver_id`, `status`, `created_at`) VALUES
+(12, 20, 9, 'accepted', '2024-07-05 22:53:56'),
+(11, 17, 9, 'accepted', '2024-07-05 15:52:25'),
+(13, 9, 3, 'accepted', '2024-07-05 23:28:19'),
+(15, 9, 5, 'accepted', '2024-07-05 23:28:19'),
+(16, 9, 6, 'accepted', '2024-07-05 23:28:19'),
+(17, 9, 8, 'accepted', '2024-07-05 23:28:19'),
+(18, 9, 10, 'accepted', '2024-07-05 23:28:46');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `likes`
+--
+
+DROP TABLE IF EXISTS `likes`;
+CREATE TABLE IF NOT EXISTS `likes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `topic_id` int NOT NULL,
+  `type` enum('like','dislike') COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `topic_id` (`topic_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `likes`
+--
+
+INSERT INTO `likes` (`id`, `user_id`, `topic_id`, `type`) VALUES
+(19, 17, 20, 'dislike'),
+(20, 17, 19, 'like'),
+(21, 17, 17, 'like'),
+(23, 9, 26, 'like');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `messages`
+--
+
+DROP TABLE IF EXISTS `messages`;
+CREATE TABLE IF NOT EXISTS `messages` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `topic_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `body` text COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `topic_id` (`topic_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `messages`
+--
+
+INSERT INTO `messages` (`id`, `topic_id`, `user_id`, `body`, `created_at`) VALUES
+(1, 1, 13, 'Merci pour ce guide, très utile pour les débutants.', '2024-06-01 11:00:00'),
+(2, 1, 14, 'Je recommande aussi de regarder des tutoriels en ligne.', '2024-06-01 12:00:00'),
+(3, 1, 9, 'J\'ai trouvé ce guide très complet et bien expliqué.', '2024-06-01 13:00:00'),
+(4, 1, 17, 'C\'est exactement ce dont j\'avais besoin pour commencer.', '2024-06-01 14:00:00'),
+(5, 1, 13, 'Merci pour le partage !', '2024-06-01 15:00:00'),
+(6, 2, 9, 'J\'attends avec impatience la sortie de ces jeux.', '2024-06-02 11:30:00'),
+(7, 2, 17, 'Excellent article, merci pour la liste.', '2024-06-02 12:30:00'),
+(8, 2, 13, 'Quels jeux vous semblent les plus prometteurs ?', '2024-06-02 13:30:00'),
+(9, 2, 14, 'J\'ai déjà pré-commandé certains de ces jeux.', '2024-06-02 14:30:00'),
+(10, 2, 9, 'Merci pour ces recommandations.', '2024-06-02 15:30:00'),
+(11, 3, 13, 'La Data Science est un domaine fascinant.', '2024-06-03 13:00:00'),
+(12, 3, 14, 'Il y a tellement de ressources disponibles pour apprendre.', '2024-06-03 14:00:00'),
+(13, 3, 9, 'Merci pour cet article introductif.', '2024-06-03 15:00:00'),
+(14, 3, 17, 'Je suis prêt à me lancer dans ce domaine.', '2024-06-03 16:00:00'),
+(15, 3, 13, 'Merci pour les conseils pratiques.', '2024-06-03 17:00:00'),
+(16, 4, 9, 'Le développement web évolue constamment.', '2024-06-04 15:00:00'),
+(17, 4, 13, 'Merci pour cet aperçu des tendances.', '2024-06-04 16:00:00'),
+(18, 4, 14, 'Quels frameworks recommandez-vous ?', '2024-06-04 17:00:00'),
+(19, 4, 17, 'C\'est toujours bon de se tenir à jour.', '2024-06-04 18:00:00'),
+(20, 4, 9, 'Merci pour cet article.', '2024-06-04 19:00:00'),
+(21, 5, 14, 'DevOps est essentiel pour les déploiements rapides.', '2024-06-05 17:00:00'),
+(22, 5, 17, 'Merci pour les conseils sur les compétences à développer.', '2024-06-05 18:00:00'),
+(23, 5, 13, 'Quels outils recommandez-vous pour débuter ?', '2024-06-05 19:00:00'),
+(24, 5, 9, 'Cet article est très informatif.', '2024-06-05 20:00:00'),
+(25, 5, 14, 'Merci pour le partage.', '2024-06-05 21:00:00'),
+(26, 6, 13, 'Très bon article pour les débutants en informatique.', '2024-06-06 18:00:00'),
+(27, 6, 9, 'Merci pour cet article.', '2024-06-06 19:00:00'),
+(28, 6, 17, 'C\'est exactement ce que je cherchais.', '2024-06-06 20:00:00'),
+(29, 6, 14, 'Article très complet.', '2024-06-06 21:00:00'),
+(30, 6, 13, 'Merci pour le partage.', '2024-06-06 22:00:00'),
+(31, 7, 14, 'Merci pour cette liste des langages de programmation.', '2024-06-07 17:00:00'),
+(32, 7, 9, 'Je vais me concentrer sur ces langages.', '2024-06-07 18:00:00'),
+(33, 7, 13, 'Très bon article.', '2024-06-07 19:00:00'),
+(34, 7, 17, 'Merci pour ces recommandations.', '2024-06-07 20:00:00'),
+(35, 7, 14, 'Je vais commencer par Python.', '2024-06-07 21:00:00'),
+(36, 8, 17, 'Les jeux vidéos innovants sont toujours intéressants.', '2024-06-08 18:00:00'),
+(37, 8, 9, 'Merci pour cette liste.', '2024-06-08 19:00:00'),
+(38, 8, 13, 'J\'ai hâte d\'essayer ces jeux.', '2024-06-08 20:00:00'),
+(39, 8, 14, 'Quels jeux recommandez-vous ?', '2024-06-08 21:00:00'),
+(40, 8, 17, 'Merci pour cet article.', '2024-06-08 22:00:00'),
+(41, 9, 9, 'Les meilleures pratiques sont toujours utiles.', '2024-06-09 19:00:00'),
+(42, 9, 13, 'Merci pour cet article.', '2024-06-09 20:00:00'),
+(43, 9, 14, 'Quels outils utilisez-vous ?', '2024-06-09 21:00:00'),
+(44, 9, 17, 'Article très informatif.', '2024-06-09 22:00:00'),
+(45, 9, 9, 'Merci pour le partage.', '2024-06-09 23:00:00'),
+(46, 10, 13, 'Merci pour cette liste des outils DevOps.', '2024-06-10 20:00:00'),
+(47, 10, 9, 'Je vais essayer certains de ces outils.', '2024-06-10 21:00:00'),
+(48, 10, 14, 'Quels outils recommandez-vous pour débuter ?', '2024-06-10 22:00:00'),
+(49, 10, 17, 'Merci pour cet article.', '2024-06-10 23:00:00'),
+(50, 10, 13, 'Article très informatif.', '2024-06-11 00:00:00'),
+(51, 11, 14, 'Python est un excellent langage pour débuter.', '2024-06-11 21:00:00'),
+(52, 11, 9, 'Merci pour cet article.', '2024-06-11 22:00:00'),
+(53, 11, 13, 'Je vais commencer à apprendre Python.', '2024-06-11 23:00:00'),
+(54, 11, 17, 'Article très complet.', '2024-06-12 00:00:00'),
+(55, 11, 14, 'Merci pour le partage.', '2024-06-12 01:00:00'),
+(56, 12, 17, 'Les jeux vidéos classiques sont toujours intéressants.', '2024-06-12 18:00:00'),
+(57, 12, 9, 'Merci pour cette liste.', '2024-06-12 19:00:00'),
+(58, 12, 13, 'J\'ai hâte de rejouer à certains de ces jeux.', '2024-06-12 20:00:00'),
+(59, 12, 14, 'Quels jeux recommandez-vous ?', '2024-06-12 21:00:00'),
+(60, 12, 17, 'Merci pour cet article.', '2024-06-12 22:00:00'),
+(61, 13, 9, 'Les frameworks de développement web sont essentiels.', '2024-06-13 19:00:00'),
+(62, 13, 13, 'Merci pour cet article.', '2024-06-13 20:00:00'),
+(63, 13, 14, 'Quels frameworks recommandez-vous ?', '2024-06-13 21:00:00'),
+(64, 13, 17, 'Article très informatif.', '2024-06-13 22:00:00'),
+(65, 13, 9, 'Merci pour le partage.', '2024-06-13 23:00:00'),
+(66, 14, 13, 'Les compétences en Data Science sont très demandées.', '2024-06-14 18:00:00'),
+(67, 14, 9, 'Merci pour cet article.', '2024-06-14 19:00:00'),
+(68, 14, 14, 'Quels sont les outils essentiels pour la Data Science ?', '2024-06-14 20:00:00'),
+(69, 14, 17, 'Article très complet.', '2024-06-14 21:00:00'),
+(70, 14, 13, 'Merci pour le partage.', '2024-06-14 22:00:00'),
+(71, 15, 14, 'Les tendances en UX/UI sont fascinantes.', '2024-06-15 19:00:00'),
+(72, 15, 17, 'Merci pour cet article.', '2024-06-15 20:00:00'),
+(73, 15, 13, 'Quels sont les outils les plus populaires pour le design UX/UI ?', '2024-06-15 21:00:00'),
+(74, 15, 9, 'Article très informatif.', '2024-06-15 22:00:00'),
+(75, 15, 14, 'Merci pour le partage.', '2024-06-15 23:00:00'),
+(76, 16, 13, 'La sécurité des applications web est cruciale.', '2024-06-16 18:00:00'),
+(77, 16, 9, 'Merci pour cet article.', '2024-06-16 19:00:00'),
+(78, 16, 17, 'Quels outils recommandez-vous pour sécuriser les applications web ?', '2024-06-16 20:00:00'),
+(79, 16, 14, 'Article très complet.', '2024-06-16 21:00:00'),
+(80, 16, 13, 'Merci pour le partage.', '2024-06-16 22:00:00'),
+(81, 17, 9, 'Les défis de l’intelligence artificielle sont nombreux.', '2024-06-17 19:00:00'),
+(82, 17, 13, 'Merci pour cet article.', '2024-06-17 20:00:00'),
+(83, 17, 14, 'Quels sont les principaux défis de l’IA ?', '2024-06-17 21:00:00'),
+(85, 17, 9, 'Merci pour le partage.', '2024-06-17 23:00:00'),
+(86, 18, 13, 'Les astuces pour réussir en DevOps sont très utiles.', '2024-06-18 20:00:00'),
+(87, 18, 9, 'Merci pour cet article.', '2024-06-18 21:00:00'),
+(88, 18, 14, 'Quels sont les outils les plus populaires pour DevOps ?', '2024-06-18 22:00:00'),
+(89, 18, 17, 'Article très complet.', '2024-06-18 23:00:00'),
+(90, 18, 13, 'Merci pour le partage.', '2024-06-19 00:00:00'),
+(91, 19, 14, 'Les jeux vidéos indépendants sont souvent très innovants.', '2024-06-19 19:00:00'),
+(92, 19, 9, 'Merci pour cette liste.', '2024-06-19 20:00:00'),
+(93, 19, 13, 'Quels jeux recommandez-vous ?', '2024-06-19 21:00:00'),
+(94, 19, 17, 'Article très informatif.', '2024-06-19 22:00:00'),
+(95, 19, 14, 'Merci pour le partage.', '2024-06-19 23:00:00'),
+(96, 20, 9, 'Les langages de programmation émergents sont fascinants.', '2024-06-20 20:00:00'),
+(97, 20, 13, 'Merci pour cet article.', '2024-06-20 21:00:00'),
+(98, 20, 14, 'Quels langages recommandez-vous de surveiller ?', '2024-06-20 22:00:00'),
+(99, 20, 17, 'Article très informatif.', '2024-06-20 23:00:00'),
+(100, 20, 9, 'Merci pour le partage.', '2024-06-21 00:00:00'),
+(101, 19, 17, 'ods', '2024-07-04 10:54:33'),
+(102, 17, 17, 'gros caca', '2024-07-04 11:35:53'),
+(103, 1, 17, 'f', '2024-07-04 11:39:29'),
+(104, 1, 17, 'fd', '2024-07-04 11:39:34'),
+(105, 1, 17, 'fddf', '2024-07-04 11:39:39'),
+(106, 1, 17, 'fdùmfksd', '2024-07-04 11:39:43'),
+(107, 1, 17, 'dfd', '2024-07-04 11:39:58');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `message_likes`
+--
+
+DROP TABLE IF EXISTS `message_likes`;
+CREATE TABLE IF NOT EXISTS `message_likes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `message_id` int NOT NULL,
+  `type` enum('like','dislike') NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `message_id` (`message_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `message_likes`
+--
+
+INSERT INTO `message_likes` (`id`, `user_id`, `message_id`, `type`) VALUES
+(22, 13, 22, 'like'),
+(21, 9, 21, 'like'),
+(20, 13, 20, 'like'),
+(19, 17, 19, 'like'),
+(18, 14, 18, 'like'),
+(17, 9, 17, 'like'),
+(16, 13, 16, 'like'),
+(15, 9, 15, 'like'),
+(14, 17, 14, 'like'),
+(13, 14, 13, 'like'),
+(12, 13, 12, 'like'),
+(11, 9, 11, 'like'),
+(10, 13, 10, 'like'),
+(9, 14, 9, 'like'),
+(8, 17, 8, 'like'),
+(7, 9, 7, 'like'),
+(6, 13, 6, 'like'),
+(5, 9, 3, 'like'),
+(4, 17, 2, 'like'),
+(3, 14, 2, 'like'),
+(2, 13, 1, 'like'),
+(1, 9, 1, 'like'),
+(23, 14, 23, 'like'),
+(24, 17, 24, 'like'),
+(25, 9, 25, 'like'),
+(26, 13, 26, 'like'),
+(27, 9, 27, 'like'),
+(28, 14, 28, 'like'),
+(29, 17, 29, 'like'),
+(30, 13, 30, 'like'),
+(31, 9, 31, 'like'),
+(32, 13, 32, 'like'),
+(33, 14, 33, 'like'),
+(34, 17, 34, 'like'),
+(35, 9, 35, 'like'),
+(36, 13, 36, 'like'),
+(37, 9, 37, 'like'),
+(38, 14, 38, 'like'),
+(39, 17, 39, 'like'),
+(40, 13, 40, 'like'),
+(41, 9, 41, 'like'),
+(42, 13, 42, 'like'),
+(43, 14, 43, 'like'),
+(44, 17, 44, 'like'),
+(45, 9, 45, 'like'),
+(46, 13, 46, 'like'),
+(47, 9, 47, 'like'),
+(48, 14, 48, 'like'),
+(49, 17, 49, 'like'),
+(50, 13, 50, 'like'),
+(51, 9, 51, 'like'),
+(52, 13, 52, 'like'),
+(53, 14, 53, 'like'),
+(54, 17, 54, 'like'),
+(55, 9, 55, 'like'),
+(56, 13, 56, 'like'),
+(57, 9, 57, 'like'),
+(58, 14, 58, 'like'),
+(59, 17, 59, 'like'),
+(60, 13, 60, 'like'),
+(61, 9, 61, 'like'),
+(62, 13, 62, 'like'),
+(63, 14, 63, 'like'),
+(64, 17, 64, 'like'),
+(65, 9, 65, 'like'),
+(66, 13, 66, 'like'),
+(67, 9, 67, 'like'),
+(68, 14, 68, 'like'),
+(69, 17, 69, 'like'),
+(70, 13, 70, 'like'),
+(71, 9, 71, 'like'),
+(72, 13, 72, 'like'),
+(73, 14, 73, 'like'),
+(74, 17, 74, 'like'),
+(75, 9, 75, 'like'),
+(76, 13, 76, 'like'),
+(77, 9, 77, 'like'),
+(78, 14, 78, 'like'),
+(79, 17, 79, 'like'),
+(80, 13, 80, 'like'),
+(81, 9, 81, 'like'),
+(82, 13, 82, 'like'),
+(83, 14, 83, 'like'),
+(84, 17, 84, 'like'),
+(85, 9, 85, 'like'),
+(86, 13, 86, 'like'),
+(87, 9, 87, 'like'),
+(88, 14, 88, 'like'),
+(89, 17, 89, 'like'),
+(90, 13, 90, 'like'),
+(91, 9, 91, 'like'),
+(92, 13, 92, 'like'),
+(93, 14, 93, 'like'),
+(94, 17, 94, 'like'),
+(95, 9, 95, 'like'),
+(96, 13, 96, 'like'),
+(97, 9, 97, 'like'),
+(98, 14, 98, 'like'),
+(99, 17, 99, 'like'),
+(100, 13, 100, 'like'),
+(101, 17, 100, 'dislike'),
+(102, 17, 85, 'dislike'),
+(103, 17, 83, 'like');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `topics`
+--
+
+DROP TABLE IF EXISTS `topics`;
+CREATE TABLE IF NOT EXISTS `topics` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `body` text COLLATE utf8mb4_general_ci NOT NULL,
+  `tags` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `state` enum('open','closed','archived') COLLATE utf8mb4_general_ci DEFAULT 'open',
+  `author_id` int DEFAULT NULL,
+  `likes_count` int DEFAULT '0',
+  `comments_count` int DEFAULT '0',
+  `category_id` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `topics`
+--
+
+INSERT INTO `topics` (`id`, `title`, `body`, `tags`, `created_at`, `state`, `author_id`, `likes_count`, `comments_count`, `category_id`) VALUES
+(1, 'Les bases de la programmation', 'Un guide complet pour commencer en programmation.', 'programmation, débutant', '2024-06-01 10:00:00', 'open', 9, 10, 5, 4),
+(2, 'Les meilleurs jeux vidéos de 2024', 'Une liste des jeux vidéos les plus attendus de 2024.', 'jeux vidéos, 2024', '2024-06-02 11:00:00', 'open', 13, 20, 10, 2),
+(3, 'Introduction à la Data Science', 'Tout ce que vous devez savoir pour commencer avec la Data Science.', 'data science, débutant', '2024-06-03 12:00:00', 'open', 14, 15, 8, 6),
+(4, 'Les dernières tendances en développement web', 'Un aperçu des tendances actuelles dans le développement web.', 'web development, tendances', '2024-06-04 13:00:00', 'open', 17, 25, 12, 5),
+(5, 'Comment devenir un expert en DevOps', 'Les compétences et outils nécessaires pour exceller en DevOps.', 'devops, expert', '2024-06-05 14:00:00', 'open', 9, 30, 15, 7),
+(6, 'Les bases de l’informatique', 'Introduction aux concepts de base de l’informatique.', 'informatique, débutant', '2024-06-06 15:00:00', 'open', 13, 8, 4, 1),
+(7, 'Top 10 des langages de programmation', 'Les langages de programmation les plus populaires en 2024.', 'programmation, langages', '2024-06-07 16:00:00', 'open', 14, 12, 6, 4),
+(8, 'Les jeux vidéos les plus innovants', 'Découvrez les jeux vidéos qui repoussent les limites.', 'jeux vidéos, innovation', '2024-06-08 17:00:00', 'open', 17, 18, 9, 2),
+(9, 'Les meilleures pratiques en développement web', 'Optimisez votre développement web avec ces meilleures pratiques.', 'web development, meilleures pratiques', '2024-06-09 18:00:00', 'open', 9, 22, 11, 5),
+(10, 'Les outils essentiels pour DevOps', 'Les outils incontournables pour tout professionnel DevOps.', 'devops, outils', '2024-06-10 19:00:00', 'open', 13, 25, 13, 7),
+(11, 'Introduction à la programmation Python', 'Commencez avec Python, un langage puissant et facile à apprendre.', 'python, débutant', '2024-06-11 20:00:00', 'open', 14, 15, 7, 4),
+(12, 'Les jeux vidéos classiques à ne pas manquer', 'Un retour sur les jeux vidéos qui ont marqué l’histoire.', 'jeux vidéos, classiques', '2024-06-12 21:00:00', 'open', 17, 30, 16, 2),
+(13, 'Les frameworks de développement web les plus populaires', 'Découvrez les frameworks web qui dominent le marché.', 'web development, frameworks', '2024-06-12 22:00:00', 'open', 9, 28, 14, 5),
+(14, 'Les compétences clés en Data Science', 'Les compétences indispensables pour devenir un data scientist.', 'data science, compétences', '2024-06-13 23:00:00', 'open', 13, 18, 9, 6),
+(15, 'Les tendances de l’UX/UI design en 2024', 'Explorez les dernières tendances en matière de design UX/UI.', 'design, UX/UI', '2024-06-15 00:00:00', 'open', 14, 20, 10, 8),
+(16, 'Comment sécuriser vos applications web', 'Les meilleures pratiques pour sécuriser vos applications web.', 'web development, sécurité', '2024-06-16 01:00:00', 'open', 17, 24, 12, 5),
+(17, 'Les défis de l’intelligence artificielle', 'gjtjytj', 'intelligence artificielle, défis', '2024-06-17 02:00:00', 'open', 9, 27, 13, 6),
+(18, 'Les astuces pour réussir en DevOps', 'Des conseils pratiques pour exceller en DevOps.', 'devops, astuces', '2024-06-18 03:00:00', 'open', 13, 29, 14, 7),
+(19, 'Les jeux vidéos indépendants à découvrir', 'Une sélection de jeux vidéos indépendants qui valent le détour.', 'jeux vidéos, indépendants', '2024-06-19 04:00:00', 'open', 14, 33, 15, 2),
+(20, 'Les langages de programmation émergents', 'Les nouveaux langages de programmation à surveiller.', 'programmation, langages', '2024-06-20 05:00:00', 'open', 17, 31, 14, 4),
+(26, 'sport', 'j\'aime le sports', 'sport,voyage', '2024-07-04 11:37:11', 'open', 17, 1, 0, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `biographie` text COLLATE utf8mb4_general_ci NOT NULL,
+  `profile_pic` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `friendship_status` varchar(10) COLLATE utf8mb4_general_ci DEFAULT 'none',
+  `last_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `isAdmin` tinyint(1) DEFAULT '0',
+  `status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'active',
+  `role` enum('user','admin') COLLATE utf8mb4_general_ci DEFAULT 'user',
+  `banned` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `biographie`, `profile_pic`, `friendship_status`, `last_login`, `isAdmin`, `status`, `role`, `banned`) VALUES
+(3, 'Test', 'testuser@example.com', '$2a$08$vX.QhLSf5a3RoouXFzRNDuth/Q.ywYo71sNGxCH2A.pOyrcndn4cW', '', '', 'none', '2024-07-01 07:08:11', 0, 'active', 'user', 1),
+(4, 'Alexis', 'dz@dz', '$2a$08$hR1kQshAT5vIUNU6Uw9nvO4ov32ogsZO6vgMCpqXlYeP9dWPqe1LK', '', '', 'none', '2024-06-24 10:05:20', 0, 'active', 'user', 0),
+(5, 'Alexx', 'lolilo@gmail.com', '$2a$08$K2yMboNZRwkvBmVo9s31kOtw39odzJUQElUDIZs8VcDO5.e1.Nz4G', '', 'profile1.png', 'none', '2024-06-28 20:06:06', 0, 'active', 'user', 0),
+(6, 'zz', 'zz@zz', '$2a$08$1DPHNjPyPCd4sUVoi0uI6eI6d4aaAFqRssG3Jv4vmOlPgDIL6V0bC', '', '', 'none', '2024-06-24 10:05:20', 0, 'active', 'user', 0),
+(8, 'periodix', '', '$2a$08$.HmyXH6ufLCAVYDt3svz6uQFwUIgypKNLMlcKW4e.hTyXBh9Yf7DS', '', '', NULL, '2024-06-25 06:49:43', 0, 'active', 'user', 0),
+(9, 'Verdugue', 'verdugue@verdugue.com', '$2a$08$gmIrc3zI8q9.sDOsBn7OUeL0O6cowh.kcZmhKLUzBlL1A0ez/Enae', 'rien', 'profile2.png', 'none', '2024-07-07 22:20:17', 0, 'active', 'user', 0),
+(13, 'period', 'ele@ele.com', '$2a$08$2rOdK.4ObJ17CFBsT76GYu3fzDf8G6alkrhKGDtYB75CTjagVA982', '', 'profile14.png', 'none', '2024-06-27 12:55:59', 0, 'active', 'user', 0),
+(14, 'cacaboudin', 'caca@caca.com', '$2a$08$9KhyUBNa44pSgpGpsRuu2uFow7ko2P7qoMax4EQxYqR0w.zgbUMEC', '', 'profile8.png', 'none', '2024-06-27 17:29:08', 0, 'active', 'user', 0),
+(17, 'lolipope', 'admin@example.com', '$2a$08$JKGoO1vWjQ3AgK5/wSqBReMxTMTVWYrBLwKy9DnbW8xR..ak9ST8K', 'bio', 'profile1.png', 'none', '2024-07-04 11:32:42', 1, 'active', 'admin', 0),
+(19, 'periodix2', 'email2@gmail.com', '$2a$08$KjDLCr.gSAyxrfIrcWTKN.4gVcZm5tC2pteFCcfonzPKHhCglJbWm', '', 'profile6.png', 'none', '2024-07-04 11:31:25', 0, 'active', 'user', 0),
+(20, 'me', 'me@gme.gmail', '$2a$08$/bvg8klBAWuRrIW.J/Qi..L3q1EA.qAGDyeGyGOpkZv2EG9sitWoq', '', 'profile18.png', 'none', '2024-07-05 22:53:34', 0, 'active', 'user', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `warnings`
+--
+
+DROP TABLE IF EXISTS `warnings`;
+CREATE TABLE IF NOT EXISTS `warnings` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `likes`
+--
+ALTER TABLE `likes`
+  ADD CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `messages`
+--
+ALTER TABLE `messages`
+  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
