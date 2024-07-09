@@ -1,14 +1,41 @@
 document.addEventListener('DOMContentLoaded', function() {
     const user = JSON.parse(localStorage.getItem('user'));
+    const navRight = document.querySelector('.nav-right');
     if (!user) {
         alert('Vous devez être connecté pour ajouter un message.');
         window.location.href = 'login.html';
         return;
     }
+
+    // Ajouter les éléments de navigation dynamique
+    navRight.innerHTML = `
+        <li><a href="profile.html?id=${user.id}" id="profile-link">Profil</a></li>
+        <li><a href="#" id="friend-requests">Demandes d'amis</a></li>
+        <li><a href="#" id="logout"><img src="deco.png" id="deco" alt="Déconnexion"></a></li>
+    `;
+
+    document.getElementById('logout').addEventListener('click', function() {
+        localStorage.removeItem('user');
+        alert('Vous avez été déconnecté.');
+        window.location.href = 'login.html';
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     const topicId = urlParams.get('id');
     const sortOrderSelect = document.getElementById('sort-order');
     let currentPage = 1;
+
+    fetch(`http://localhost:3000/user/${user.id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const profileLink = document.getElementById('profile-link');
+                profileLink.innerHTML = `<img src="${data.user.profile_pic}" alt="Profile Picture" class="profile-pic">`;
+            } else {
+                console.error('Erreur : ' + data.message);
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
 
     function loadTopicAndMessages(sortOrder = 'recent', page = 1) {
         fetch(`http://localhost:3000/topics/${topicId}?sortOrder=${sortOrder}&page=${page}`)
@@ -19,10 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('topic-title').textContent = topic.title;
                     document.getElementById('topic-body').textContent = topic.body;
                     document.getElementById('topic-author-pic').src = topic.author_profile_pic;
-                    document.getElementById('topic-author-name').textContent = `${topic.author_name}`;
+                    document.getElementById('topic-author-name').innerHTML = `<a href="profile.html?id=${topic.author_id}">${topic.author_name}</a>`;
                     document.getElementById('topic-created-at').textContent = `Posté le: ${new Date(topic.created_at).toLocaleString()}`;
 
-                    // Vérifiez si les boutons d'administration existent déjà
                     let adminControls = document.getElementById('admin-controls');
                     if (user.id === topic.author_id && !adminControls) {
                         adminControls = document.createElement('div');
@@ -99,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         messageElement.innerHTML = `
                             <div id="message-header">
                                 <img class="profile-pic" src="${message.profile_pic}" alt="Profile Picture">
-                                <p>${message.username}</p>
+                                <p><a href="profile.html?id=${message.user_id}">${message.username}</a></p>
                             </div>
                             <div id="message">
                                 <p id="message-text">${message.body}</p>
@@ -107,8 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             <p><em>Posté le ${new Date(message.created_at).toLocaleString()}</em></p>
                             <p id="popularite"><strong>Popularité:</strong> ${message.popularity || 0}</p>
                             <div id="likes">
-                            <button class="like-button" data-message-id="${message.id}" data-type="like">Like</button>
-                            <button class="dislike-button" data-message-id="${message.id}" data-type="dislike">Dislike</button>
+                                <button class="like-button" data-message-id="${message.id}" data-type="like">Like</button>
+                                <button class="dislike-button" data-message-id="${message.id}" data-type="dislike">Dislike</button>
                             </div>
                         `;
 
@@ -164,18 +190,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                     });
 
-                    // Manage pagination buttons
                     const prevPageButton = document.getElementById('prev-page');
                     const nextPageButton = document.getElementById('next-page');
 
-                    // Show or hide previous page button
                     if (page > 1) {
                         prevPageButton.style.display = 'inline-block';
                     } else {
                         prevPageButton.style.display = 'none';
                     }
 
-                    // Show or hide next page button
                     if (data.messages.length === 10) {
                         nextPageButton.style.display = 'inline-block';
                     } else {
@@ -219,12 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => console.error('Erreur:', error));
-    });
-
-    document.getElementById('logout').addEventListener('click', function() {
-        localStorage.removeItem('user');
-        alert('Vous avez été déconnecté.');
-        window.location.href = 'login.html';
     });
 
     document.getElementById('prev-page').addEventListener('click', function() {

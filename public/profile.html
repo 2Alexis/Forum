@@ -8,46 +8,59 @@
 </head>
 <body>
     <nav>
-        <ul>
-            <li><a href="home.html">Accueil</a></li>
-            <li><a href="profile.html">Profil</a></li>
-            <li><a href="#" id="logout">Déconnexion</a></li>
+        <ul class="nav-left">
+            <li><a id="logo-link" href="home.html"><img src="logo.png" id="logo">TrendyTalk</a></li>
+        </ul>
+        <ul class="nav-right">
+            <li><button id="logoutButton" class="white-button2"><img src="deco.png" id="deco" alt="Déconnexion"></button></li>
         </ul>
     </nav>
     <div id="container">
         <div class="profile-container">
-            <h1>Profil de l'utilisateur</h1>
             <div id="profileDisplay">
-                <img id="profile_pic" src="" alt="Profile Image" class="profile-pic"><br>
-                <p><strong>Nom d'utilisateur :</strong> <span id="username-display"></span></p>
-                <p><strong>Email :</strong> <span id="email-display"></span></p>
-                <p><strong>Biographie :</strong> <span id="biographie-display"></span></p>
-                <p><strong>Statut d'amitié :</strong> <span id="friendship_status"></span></p>
-                <p><strong>Dernière connexion :</strong> <span id="last_login"></span></p>
-                <button id="editProfileButton" class="white-button">Modifier le profil</button>
-                <button id="addFriendButton" class="white-button" style="display: none;">Ajouter en ami</button>
+                <div id="top">
+                    <div id="top-profile">
+                        <img id="profile_pic" src="" alt="Profile Image" class="profile-pic"><br>
+                        <p><span id="username-display"></span></p>
+                        <button id="editProfileButton" class="white-button3">Modifier le profil</button>
+                        <button id="addFriendButton" class="white-button3" style="display: none;">Ajouter en ami</button>
+                    </div>
+                    <div id="modif-button"></div>
+                </div>
+                <div id="dd">
+                    <div id="info">
+                        <p class="info-text">Email : <span id="email-display"></span></p>
+                        <p class="info-text">Biographie : <span id="biographie-display"></span></p>
+                        <p class="info-text">Dernière connexion : <span id="last_login"></span></p>
+                        <p>Nombre de messages envoyés : <span id="messages-count"></span></p>
+                        <p>Nombre de topics créés : <span id="topics-count"></span></p>
+                    </div>
+                 </div>
             </div>
-            <div id="profileEdit" style="display: none;">
+            <div id="profileEdit" class="profile-edit" style="display: none;">
                 <form id="updateProfileForm">
-                    <button type="button" class="white-button" id="changeProfilePic" >Changer de photo</button>
-                    <input type="hidden" id="profile_pic_input" name="profile_pic_input"><br><br>
-
+                    <div class="profile-pic-container">
+                        <img id="profile_pic_preview" class="profile-pic" src="" alt="Profile Image">
+                        <button type="button" class="white-button" id="changeProfilePic">Changer de photo</button>
+                        <input type="hidden" id="profile_pic_input" name="profile_pic_input"><br><br>
+                    </div>
                     <label for="username">Nom d'utilisateur :</label>
                     <input type="text" id="username" name="username" required><br><br>
-
+            
                     <label for="biographie">Biographie :</label>
                     <textarea id="biographie" name="biographie" required></textarea><br><br>
-
+            
                     <p><strong>Email :</strong> <span id="email"></span></p>
-                    <p><strong>Statut d'amitié :</strong> <span id="friendship_status"></span></p>
-                    <p><strong>Dernière connexion :</strong> <span id="last_login"></span></p>
-
+            
                     <button id="white-button" class="white-button" type="submit">Enregistrer les modifications</button>
                 </form>
-            </div>
+            </div>            
+            
             <div id="friendsList">
-                <h2>Liste d'amis</h2>
+                <h2 id="idd">Liste d'amis</h2>
                 <ul id="friendsListContainer"></ul>
+                <button id="loadMoreFriends" style="display: block; margin: 0 auto;">Voir plus</button>
+                <button id="showLessFriends" style="display: none; margin: 0 auto;">Voir moins</button>
             </div>
         </div>
     </div>

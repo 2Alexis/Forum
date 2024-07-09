@@ -138,9 +138,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     data.categories.forEach(category => {
                         const categoryElement = document.createElement('a');
                         categoryElement.href = `#`;
+                        categoryElement.dataset.name = category.name; // Add this line
                         categoryElement.textContent = category.name;
                         categoryElement.addEventListener('click', () => {
-                            loadTopicsByCategory(category.id);
+                            loadTopicsByCategory(category.id, category.name);
                         });
                         categoriesDropdown.appendChild(categoryElement);
                     });
@@ -216,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error:', error));
     }
 
-    function loadTopicsByCategory(categoryId) {
+    function loadTopicsByCategory(categoryId, categoryName) { // Modified function signature
         console.log('Loading topics for category ID:', categoryId); // Debug log
         fetch(`http://localhost:3000/topics/category/${categoryId}`)
             .then(handleError)
@@ -244,6 +245,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         topicsContainer.appendChild(topicElement);
                     });
 
+                    // Afficher le message de résultat
+                    const categoryResult = document.getElementById('category-result');
+                    categoryResult.textContent = `${data.topics.length} résultat(s) pour la catégorie : ${categoryName}`;
+                    categoryResult.style.display = 'block';
+
                     document.getElementById('prev-page').style.display = currentPage > 1 ? 'block' : 'none';
                     document.getElementById('next-page').style.display = data.topics.length === 6 ? 'block' : 'none';
 
@@ -262,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             .then(data => {
                                 if (data.success) {
                                     alert(`${type === 'like' ? 'Liked' : 'Disliked'} successfully!`);
-                                    loadTopicsByCategory(categoryId);
+                                    loadTopicsByCategory(categoryId, categoryName); // Pass categoryName
                                     updateLikedTopics();
                                 } else {
                                     alert('Erreur : ' + data.message);
@@ -333,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     data.topics.forEach(topic => {
                         topicsList += `
                             <div>
-                                <h2><a href="topic.html?id=${topic.id}">${topic.title}</a></h2>
+                                <h2><a id="liked" href="topic.html?id=${topic.id}">${topic.title}</a></h2>
                                 <p id="separation"></p>
                             </div>
                         `;

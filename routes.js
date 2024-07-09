@@ -474,17 +474,45 @@ router.get('/topics/category/:category_id', (req, res) => {
 // Route pour obtenir les informations de l'utilisateur
 router.get('/user/:id', (req, res) => {
     const userId = req.params.id;
-    const query = 'SELECT id, username, email, biographie, profile_pic FROM users WHERE id = ?';
-    db.query(query, [userId], (err, results) => {
+    const userQuery = 'SELECT id, username, email, biographie, profile_pic, last_login FROM users WHERE id = ?';
+    const topicsCountQuery = 'SELECT COUNT(*) AS topics_count FROM topics WHERE author_id = ?';
+    const messagesCountQuery = 'SELECT COUNT(*) AS messages_count FROM messages WHERE user_id = ?';
+
+    db.query(userQuery, [userId], (err, userResults) => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
-        if (results.length === 0) {
+        if (userResults.length === 0) {
             return res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
         }
-        res.status(200).json({ success: true, user: results[0] });
+
+        db.query(topicsCountQuery, [userId], (err, topicsCountResults) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Erreur serveur' });
+            }
+            
+            db.query(messagesCountQuery, [userId], (err, messagesCountResults) => {
+                if (err) {
+                    return res.status(500).json({ success: false, message: 'Erreur serveur' });
+                }
+
+                const user = userResults[0];
+                const topicsCount = topicsCountResults[0].topics_count;
+                const messagesCount = messagesCountResults[0].messages_count;
+
+                res.status(200).json({
+                    success: true,
+                    user: {
+                        ...user,
+                        topics_count: topicsCount,
+                        messages_count: messagesCount
+                    }
+                });
+            });
+        });
     });
 });
+
 
 // Route pour mettre à jour les informations de l'utilisateur
 router.put('/user/:id', (req, res) => {
@@ -579,23 +607,33 @@ router.get('/friends/:user_id', (req, res) => {
 });
 
 
-// Route pour récupérer les demandes d'amis en attente
-router.get('/pending-friend-requests/:user_id', (req, res) => {
+
+// Route pour récupérer les amis avec pagination
+router.get('/friends/:user_id', (req, res) => {
     const userId = req.params.user_id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const offset = (page - 1) * limit;
+
     const query = `
-        SELECT f.*, u.username, u.profile_pic 
+        SELECT u.id, u.username, u.email, u.profile_pic 
         FROM friendships f
-        JOIN users u ON f.requester_id = u.id
-        WHERE f.receiver_id = ? AND f.status = 'pending'
+        JOIN users u ON (f.requester_id = u.id AND f.receiver_id = ?) 
+                    OR (f.receiver_id = u.id AND f.requester_id = ?)
+        WHERE f.status = 'accepted' AND u.id != ?
+        LIMIT ? OFFSET ?
     `;
-    db.query(query, [userId], (err, results) => {
+    db.query(query, [userId, userId, userId, limit, offset], (err, results) => {
         if (err) {
-            console.error('Erreur lors de la récupération des demandes d\'amis en attente:', err);
+            console.error('Erreur lors de la récupération des amis:', err);
             return res.status(500).json({ success: false, message: 'Erreur serveur' });
         }
-        res.status(200).json({ success: true, requests: results });
+        res.status(200).json({ success: true, friends: results });
     });
 });
+
+
+
 
 // Route pour supprimer un ami
 router.post('/remove-friend', (req, res) => {

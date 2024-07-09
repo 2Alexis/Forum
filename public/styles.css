@@ -60,7 +60,6 @@ nav ul {
 .nav-left {
     flex: 1;
     display: flex;
-    text-align: center;
 }
 
 .nav-center {
@@ -334,6 +333,50 @@ footer {
 
 #deco {
     width: 35px;
+}
+
+.accept-request, .reject-request {
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
+    border: 2px solid #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.accept-request:hover {
+    background-color: #27a229;
+    border-color: #555;
+
+}
+
+
+
+#loupe {
+    width:25px;
+}
+
+
+
+a#liked:hover {
+    text-decoration: underline red;
+    color: red;
+}
+
+#ddd {
+display: flex;
+align-items: center;
+gap:20px;
+}
+
+.reject-request:hover {
+    background-color: #e53434;
+    border-color: #555;
+
 }
 
 #profile-link {
@@ -783,6 +826,7 @@ h1 {
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ccc;
+    color:black;
 }
 
 .friend-request img {
@@ -806,6 +850,11 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     z-index: 1000;
+    border-radius: 20px;
+}
+
+#category-result {
+    font-size: 20px;
 }
 
 .popup-content {
@@ -813,12 +862,14 @@ h1 {
     display: flex;
     flex-direction: column;
     gap:20px;
+    border: 3px solid black;
+    border-radius: 20px;
 }
 
 /* Style pour le bouton de fermeture */
 .close-button {
     cursor: pointer;
-    font-size: 30px;
+    font-size: 50px;
     position: absolute;
     right: 10px;
     color: black;
@@ -845,10 +896,10 @@ h1 {
 
 .popup .close-button {
     position: absolute;
-    top: 10px;
+    top: -1px;
     right: 10px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 33px;
 }
 
 #logout {
@@ -913,14 +964,13 @@ h1 {
 }
 
 #search-button {
-    padding: 5px 10px;
-    font-size: 16px;
+    margin-left: 20px;
+    background: none;
     border: none;
-    background-color: #04AA6D;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-left: 5px;
+}
+
+#search-button:hover {
+    transform: scale(1.05);
 }
 
 #reset-search-button {
@@ -938,9 +988,7 @@ h1 {
     width: 30px;
 }
 
-#search-button:hover {
-    background-color: #039f5c;
-}
+
 
 #reset-search-button:hover {
     transform: scale(1.3);

@@ -4,21 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Créer un Topic</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="create.css">
     <script src="create-topic.js"></script>
 </head>
 <body>
     <nav>
-        <ul>
-            <li><a href="home.html">Accueil</a></li>
-            <li><a href="create-topic.html">Créer un Topic</a></li>
-            <li class="dropdown">
-                <a href="#" id="profile-link">Profil</a>
-                <div class="dropdown-content" id="profile-dropdown">
-                    <!-- Informations du profil seront insérées ici -->
-                </div>
-            </li>
-            <li><a href="#" id="logout">Déconnexion</a></li>
+        <ul class="nav-left">
+            <li><a id="logo-link" href="home.html"><img src="logo.png" id="logo">TrendyTalk</a></li>
+        </ul>
+       
+        <ul class="nav-right">
+            <!-- Les éléments seront ajoutés dynamiquement par le JS -->
         </ul>
     </nav>
     <h1>Créer un Topic</h1>

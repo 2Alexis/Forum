@@ -11,14 +11,68 @@ body {
     color: white;
 }
 
-#container {
+.nav-left {
+    flex: 1;
     display: flex;
-    justify-content: center;
+}
+
+#logo-link {
+    background: none;
+    display: flex;
     align-items: center;
-    height: 100vh; /* S'assure que le container prend toute la hauteur de la fenêtre */
+    flex-direction: column;
+}
+
+#idd {
+
+display: flex;
+justify-content: center;
+
+}
+
+#logo {
+    width: 120px;
+}
+
+#logo:hover {
+    transform: scale(1.1);
+}
+
+nav {
+    background-color: #262D35;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#deco {
+    width: 35px;
+}
+
+#deco:hover {
+    transform: scale(1.05);
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+#container {
+    height: 80vh; /* S'assure que le container prend toute la hauteur de la fenêtre */
     background-color: #1F262E; /* Fond sombre pour correspondre à votre thème */
 }
 
+.white-button2 {
+    background: none;
+    border: none;
+    margin-right: 20px;
+
+}
 
 .white-button {
     font-family: 'Rubik', sans-serif;
@@ -36,6 +90,7 @@ body {
 .white-button:hover {
     background-color: #939393;
     border-color: #555;
+    transform: scale(1.05);
 }
 
 .white-button:active {
@@ -48,7 +103,7 @@ body {
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
-#white-button {
+.white-button3 {
     font-family: 'Rubik', sans-serif;
     font-size: 16px;
     font-weight: 500;
@@ -59,84 +114,114 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-bottom: 25px;
+    margin-left: 20px;
 }
 
-#white-button:hover {
+.white-button3:hover {
     background-color: #939393;
     border-color: #555;
 }
 
-#white-button:active {
+.white-button3:active {
     background-color: #e6e6e6;
     border-color: #777;
 }
 
-#white-button:focus {
+.white-button3:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
+#top-profile {
+    display: flex;
+    gap: 20px;
+    align-items: end;
+    margin-left: 50px;
+}
 
-.profile-container {
-    background-color: #262D35; /* Fond légèrement plus clair pour le conteneur de profil */
-    padding: 20px;
-    border-radius: 10px;
-    color: white;
-    max-width: 500px;
-    width: 100%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+#username-display {
+    font-size: 50px;
+}
+
+.info-text {
+    font-size: 20px;
+    font-family: rubik;
+}
+
+#friendsListContainer {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    max-height: 1000px;
+    gap: -25px;
+    width: 800px;
+    margin-left: 590px;
 }
 
 .profile-container h1, .profile-container h2 {
+    display: flex;
     text-align: center;
+    margin-top: 20px;
 }
+
+#break {
+    width: 30px;
+}
+
+
 
 .profile-container img.profile-pic {
-    display: block;
-    margin: 0 auto 10px;
+    display: flex;
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
-}
-
-
-nav {
-    background-color: #262D35;
-    padding: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-}
-
-.nav-left {
-    flex: 1;
-    display: flex;
-    text-align: center;
-}
-
-.nav-center {
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.nav-right {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
+    width: 200px;
+    height: 200px;
 }
 
 nav ul li {
     position: relative;
+}
+
+#profileEdit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+
+form label, form p {
+    font-size: 16px;
+    font-family: 'Rubik', sans-serif;
+    margin-bottom: 10px;
+}
+
+form input, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+}   
+
+#last_login {
+    color:grey;
+    margin-bottom: 20px;
+
+}
+
+#updateProfileForm {
+    background-color: white;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    color: black;
 }
 
 nav ul li a {
@@ -151,14 +236,35 @@ nav ul li a:hover {
     background-color: #575757;
 }
 
-.nav-center input[type="text"] {
-    margin-left: 10px;
-    padding: 5px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
+#modif-button {
+    margin-right: 150px;
 }
 
-/* Modal styles */
+#top {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 20px;
+    border-radius: 20px;
+}
+
+#dd {
+    display: flex;
+    justify-content: center;
+}
+
+#info {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 1500px;
+    align-items: center;
+    margin-right: 20px;
+    border-radius: 20px;
+    color: black;
+}
+
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -184,24 +290,38 @@ nav ul li a:hover {
 
 #friend-container {
     display: flex;
+    gap: 20px;
+    flex-direction: column;
     align-items: center;
+    background-color: white;
+    border-radius: 20px;
+    width: 100px;
+    padding: 10px;
+}
 
+.remove-friend {
+    width: 50px;
+    border: none;
+    background-color: red;
+    border-radius: 10px;
+}
 
+.remove-friend:hover {
+    transform: scale(1.05);
 }
 
 #left-friend {
     display: flex;
     flex-direction: column;
+    color: black;
+    width: 100%;
     align-items: center;
-    margin-right: 10px;
-
 }
 
-
 .friend-pic {
-width: 80px;
-border-radius: 50%;
-height:80px;
+    width: 80px;
+    border-radius: 50%;
+    height: 80px;
 }
 
 .close {
@@ -211,9 +331,128 @@ height:80px;
     font-weight: bold;
 }
 
+/* Existing CSS */
+
+#friendsListContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.show-all #friendsListContainer {
+    max-height: none;
+}
+
+/* Existing CSS */
+
+#friendsListContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+/* Existing CSS */
+
+#friendsListContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    overflow: hidden;
+    max-height: 300px; /* Adjust this value as needed */
+    transition: max-height 0.3s ease-out;
+}
+
+#friendsListContainer.expanded {
+    max-height: none;
+}
+
+/* Ajoutez ces règles CSS au fichier profile.css */
+#friendsListContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    max-height: 400px; /* Ajustez la hauteur maximale selon vos besoins */
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+#friendsListContainer.expanded {
+    max-height: 1000px;
+    gap: -25px;
+    width: 800px;
+    margin-left: 590px;
+}
+
+#loadMoreFriends, #showLessFriends {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#loadMoreFriends:hover, #showLessFriends:hover {
+    background-color: #939393;
+    border-color: #555;
+}
+
+#loadMoreFriends:active, #showLessFriends:active {
+    background-color: #e6e6e6;
+    border-color: #777;
+}
+
+#loadMoreFriends:focus, #showLessFriends:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+
+.firend {
+    width: 100px;
+}
+
+
+
 .close:hover,
 .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.pagination-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #fff;
+    color: #333;
+    border: 2px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-button:hover {
+    background-color: #939393;
+    border-color: #555;
+}
+
+.pagination-button:active {
+    background-color: #e6e6e6;
+    border-color: #777;
+}
+
+.pagination-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
